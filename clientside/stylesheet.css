@@ -3,12 +3,20 @@
     font-family: Arial;
 }
 
+.petitionpage {
+    margin: auto;
+    width: 1000px;
+    background-color: lightblue;
+    text-align: center;
+}
+
 body {
     margin: auto;
     width: 1000px;
     background-color: lightblue;
 }
-
+h1 {
+}
 canvas {
     border: 4px solid black;
     margin-top: 25px;
@@ -19,18 +27,22 @@ canvas {
 }
 
 input {
-  display: inline-block;
-  border: 2px solid black;
-  width: 6em;
-  position: relative;
-  top: -2.8em;
+    display: inline-block;
+    border: 2px solid black;
+    width: 6em;
+    position: relative;
+    top: -2.8em;
+}
+
+.form input {
+    left: -70px;
 }
 
 .names label {
-  display: inline-block;
-  width: 6em;
-  margin-right: .5em;
-  padding-top: 3.5em;
+    display: inline-block;
+    width: 6em;
+    margin-right: .5em;
+    padding-top: 3.5em;
 }
 
 .names {
@@ -40,6 +52,26 @@ input {
     justify-content: space-around;
 }
 
+.form {
+    width: 80%;
+    margin: auto;
+}
+
+.registration-fields {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-auto-flow: row;
+    margin: auto 0;
+}
+
+.registration-fields label {
+    margin: auto;
+  display: inline-block;
+  width: 10em;
+  padding-top: 3.5em;
+  text-align: center;
+}
 .signage {
     display: inline-block;
     width: 6em;
@@ -47,7 +79,7 @@ input {
 }
 
 .signage label {
-    padding-top: 10em;
+    padding-top: 5em;
 }
 
 #firstname {
@@ -56,6 +88,16 @@ input {
     font-size: 20px;
 }
 #lastname {
+    width: 300px;
+    margin: 0 auto;
+    font-size: 20px;
+}
+#emailaddress {
+    width: 300px;
+    margin: 0 auto;
+    font-size: 20px;
+}
+#password {
     width: 300px;
     margin: 0 auto;
     font-size: 20px;

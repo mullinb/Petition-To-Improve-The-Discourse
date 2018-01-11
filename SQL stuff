@@ -42,6 +42,17 @@ CREATE TABLE signatures (
     signature TEXT NOT NULL
 );
 
+id (the primary key), first name, last name, email address, and the hashed password.
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    FirstName VARCHAR(300) NOT NULL,
+    LastName VARCHAR(300) NOT NULL,
+    Email VARCHAR(300) NOT NULL,
+    HashPass VARCHAR(320) NOT NULL,
+    DateCreated timestamptz NOT NULL
+);
+
 INSERT INTO signatures (first, last, signature) VALUES (Brian, Mullin, Infinite);
 
 INSERT INTO signatures (first, last, signature) VALUES ('Brian', 'Mullin', 'Infinite'
