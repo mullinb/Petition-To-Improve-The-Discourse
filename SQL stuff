@@ -1,0 +1,48 @@
+CREATE TABLE actors (
+    id SERIAL primary key,
+    name VARCHAR(255) not null,
+    age VARCHAR(255),
+    numberofoscars VARCHAR(255)
+);
+
+
+INSERT INTO actors (name, age, numberofoscars) VALUES ('Leonardo DiCaprio', 41, 1);
+INSERT INTO actors (name, age, numberofoscars) VALUES ('Jennifer Lawrence', 25, 1);
+INSERT INTO actors (name, age, numberofoscars) VALUES ('Samuel L. Jackson', 67, 0);
+INSERT INTO actors (name, age, numberofoscars) VALUES ('Meryl Streep', 66, 3);
+INSERT INTO actors (name, age, numberofoscars) VALUES ('John Cho', 43, 0);
+
+ALTER TABLE actors ALTER COLUMN numberofoscars ;
+ALTER TABLE actors ALTER COLUMN numberofoscars TYPE integer USING numberofoscars::integer;
+
+
+SELECT * FROM actors WHERE numberofoscars > 0
+
+ALTER TABLE actors ALTER COLUMN age TYPE integer USING age::integer;
+;
+
+SELECT TOP 0 * FROM actors;
+
+SELECT * FROM actors WHERE 1=0;
+
+DELETE FROM actors WHERE id > 0;
+
+SELECT TOP 10 *
+INTO #TempTable
+FROM actors;
+
+EXEC tempdb.dbo.sp_help N'#TempTable';
+
+
+
+CREATE TABLE signatures (
+    id SERIAL PRIMARY KEY,
+    first VARCHAR(300) NOT NULL,
+    last VARCHAR(300) NOT NULL,
+    signature TEXT NOT NULL
+);
+
+INSERT INTO signatures (first, last, signature) VALUES (Brian, Mullin, Infinite);
+
+INSERT INTO signatures (first, last, signature) VALUES ('Brian', 'Mullin', 'Infinite'
+);
