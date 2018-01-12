@@ -30,31 +30,42 @@ const pages = ['register', 'login', 'sign', 'thanks', 'signatures'];
 
 //===============SERVER==========//
 
+let cookies = false;
+let sessionUser = false;
+
+try {
+    if (req.cookies.hasSigned) {
+        cookies = true;
+    }
+} catch (e) {console.log('not signed')}
+
+try {
+    if (req.session.user) {
+        sessionUser = req.session.user;
+    }
+} catch (e) (console.log('either logged out or unregistered'))
+
 app.use(express.static('clientside'));
 
 app.get('/',(req, res) => {
-    if (!req.cookies.hasSigned && !req.session.user) {
+    if (!cookies && !sessionUser) {
         redirectToPage('register', req, res);
-    } else if (!req.cookies.hasSigned && req.session.user && !req.session.user.loggedIn) {
+    } else if (!cookies && sessionUser && !sessionUser.loggedIn) {
         redirectToPage('login', req, res);
-    } else if (req.cookies.hasSigned && req.session.user.loggedIn) {
+    } else if (cookies && sessionUser.loggedIn) {
         redirectToPage('thanks', req, res);
-    } else if (req.session.user.loggedIn) {
+    } else if (sessionUser.loggedIn) {
         redirectToPage('sign', req, res);
     }
 })
 
-// app.get('/:page', (req, res) {
-//     if req.params.page
-// }
-
 app.get('/register', (req, res) => {
     try {
-        if (!req.cookies.hasSigned & !req.session.user.loggedIn) {
+        if (!cookies & !sessionUser.loggedIn) {
             res.render('register');
-        } else if (req.cookies.hasSigned && req.session.user.loggedIn) {
+        } else if (cookies && sessionUser.loggedIn) {
             redirectToPage('thanks', req, res);
-        } else if (!req.cookies.hasSigned && req.session.user.loggedIn) {
+        } else if (!cookies && sessionUser.loggedIn) {
             redirectToPage('sign', req, res);
         }
     } catch (e) {
@@ -63,10 +74,9 @@ app.get('/register', (req, res) => {
 })
 
 app.get('/login', (req, res) => {
-
-    if (!req.session.user.loggedIn) {
+    if (!sessionUser.loggedIn) {
         res.render('login');
-    } else if (!req.cookies.hasSigned) {
+    } else if (!cookies) {
         redirectToPage('sign', req, res);
     } else {
         redirectToPage('thanks', req, res);
@@ -74,7 +84,7 @@ app.get('/login', (req, res) => {
 })
 
 app.get('/thanks', (req, res) => {
-    if (req.cookies.hasSigned && req.session.user.loggedIn) {
+    if (cookies && sessionUser.loggedIn) {
         getSignatures()
         .then((results) => {
             res.render('thanks', {
@@ -82,7 +92,7 @@ app.get('/thanks', (req, res) => {
                 actualSignature: results.rows[req.session.signatureId-1].signature
             })
         })
-    } else if (req.session.user.loggedIn) {
+    } else if (sessionUser.loggedIn) {
         redirectToPage('sign', req, res);
     } else {
         redirectToPage('register', req, res);
@@ -90,9 +100,9 @@ app.get('/thanks', (req, res) => {
 })
 
 app.get('/sign'), (req, res) => {
-    if (req.session.user.loggedIn && !req.cookies.hasSigned) {
+    if (!cookies && sessionUser.loggedIn) {
         res.render('petition');
-    } else if (req.session.user.loggedIn && req.cookies.hasSigned) {
+    } else if (cookies && sessionUser.loggedIn) {
         redirectToPage('thanks', req, res);
     } else {
         redirectToPage('register', req, res);
@@ -100,7 +110,7 @@ app.get('/sign'), (req, res) => {
 }
 
 app.get('/signatures',(req, res) => {
-    if (req.session.user.loggedIn) {
+    if (sessionUser.loggedIn) {
         getSignatures()
         .then((results) => {
             res.render('signatures', {
@@ -130,7 +140,7 @@ app.post('/register', (req, res) => {
             }
         }
         res.render('register', {
-            errorMessage: `The following fields were missing: ${missing} \n please re-enter your data`,
+            errorMessage: `The following fields were missing: ${missing} \n Please complete these fields.`,
             firstName: firstName,
             lastName: lastName,
             emailAddress: emailAddress
@@ -138,13 +148,14 @@ app.post('/register', (req, res) => {
     }
     if (firstName && lastName && emailAddress && password) {
         registerUser(firstName, lastName, emailAddress, password)
-        .then(() => {
+        .then((userId) => {
             req.session.user = {
                 loggedIn: 'yes',
                 firstName: firstName,
                 lastName: lastName,
                 emailAddress: emailAddress,
-                password: password
+                password: true
+                userId: userId;
             };
             res.cookie("hasSigned", "Signed", {
                 httpOnly: true
@@ -159,32 +170,14 @@ app.post('/register', (req, res) => {
     }
 })
 
-app.post('/login', (req, res) => {
-    if(req.body.FirstName && req.body.LastName && req.body.sig) {
-        signPetition(req.body.FirstName, req.body.LastName, req.body.sig)
-        .then(getSignatures)
-        .then((results) => {
-            req.session.signatureId = results.rows[results.rows.length-1].id;
-            res.cookie("hasSigned", "Signed", {
-                httpOnly: true
-            });
-            redirectToPage('thanks', req, res);
-        })
-        .catch((err) => {
-            res.render('petition', {
-                errorMessage: "That was an invalid entry, please try again!"
-            })
-        })
-    } else {
-        res.render('petition', {
-            errorMessage: "That was an invalid entry, please try again!"
-        })
-    }
-})
 
 app.post('/sign', (req, res) => {
-    if(req.body.FirstName && req.body.LastName && req.body.sig) {
-        signPetition(req.body.FirstName, req.body.LastName, req.body.sig)
+    if (!req.body.sig) {
+        res.render('petition', {
+            errorMessage: `Please enter your signature if you would like to sign the petition.`
+        })
+    } else if(req.body.sig) {
+        signPetition(sessionUser.FirstName, sessionUser.LastName, req.body.sig, sessionUser.userId)
         .then(getSignatures)
         .then((results) => {
             req.session.signatureId = results.rows[results.rows.length-1].id;
@@ -205,14 +198,59 @@ app.post('/sign', (req, res) => {
     }
 })
 
-function signPetition (firstName, lastName, sig) {
+
+app.post('/login', (req, res) => {
+    try {
+        let emailAddress = req.body.EmailAddress;
+        let password = req.body.Password;
+    } catch (e) {
+        res.render('login', {
+            errorMessage: "Invalid username or password."
+        });
+    }
+    if(req.body.EmailAddress && req.body.Password) {
+        signPetition(req.body.FirstName, req.body.LastName, req.body.sig, req.session.userId)
+        .then(getSignatures)
+        .then((results) => {
+            req.session.signatureId = results.rows[results.rows.length-1].id;
+            res.cookie("hasSigned", "Signed", {
+                httpOnly: true
+            });
+            redirectToPage('thanks', req, res);
+        })
+        .catch((err) => {
+            res.render('petition', {
+                errorMessage: "That was an invalid entry, please try again!"
+            })
+        })
+    } else {
+        res.render('petition', {
+            errorMessage: "That was an invalid entry, please try again!"
+        })
+    }
+})
+
+
+function signPetition (firstName, lastName, sig, userId) {
     return db.query(
-        `INSERT INTO signatures (first, last, signature) VALUES ($1, $2, $3);`, [firstName, lastName, sig])
+        `INSERT INTO signatures (first, last, signature, userId) VALUES ($1, $2, $3, $4);`, [firstName, lastName, sig, userId])
+        .then((results) => {
+            return results.rows[results.rows.length-1].id;
+        })
+        .catch((err) => {
+            return(err);
+        })
 }
 
 function registerUser (firstName, lastName, Email, HashPass) {
     return db.query(
         `INSERT INTO users (FirstName, LastName, Email, HashPass) VALUES ($1, $2, $3, $4);`, [firstName, lastName, Email, HashPass])
+        .then((results) => {
+            return results.rows[results.rows.length-1].id;
+        })
+        .catch((err) => {
+            return(err);
+        })
 }
 
 function getSignatures () {
@@ -220,8 +258,15 @@ function getSignatures () {
         `SELECT id, first, last, signature FROM signatures;`
     )
 }
+function getUsers () {
+    return db.query(
+        `SELECT FirstName, LastName, Email FROM users WHERE FirstName = $1 && LastName = $2 and Email =$3 and HashPass = $4;`
+        , [firstName, lastName, Email, HashPass])
+    )
+}
 
-function redirectToPage(page, req, res, obj) {
+
+function redirectToPage(page, req, res, options) {
     res.statusCode = 302;
     res.setHeader('Location', `/${page}`);
     res.end();

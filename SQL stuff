@@ -21,6 +21,8 @@ SELECT * FROM actors WHERE numberofoscars > 0
 ALTER TABLE actors ALTER COLUMN age TYPE integer USING age::integer;
 ;
 
+ALTER TABLE signatures ADD userId INTEGER NOT NULL
+
 SELECT TOP 0 * FROM actors;
 
 SELECT * FROM actors WHERE 1=0;
@@ -52,6 +54,10 @@ CREATE TABLE users (
     HashPass VARCHAR(320) NOT NULL,
     DateCreated timestamptz NOT NULL
 );
+
+ALTER TABLE users ADD CONSTRAINT uniqueEmails UNIQUE (Email);
+ALTER TABLE signatures ADD userId INTEGER NOT NULL;
+
 
 INSERT INTO signatures (first, last, signature) VALUES (Brian, Mullin, Infinite);
 
