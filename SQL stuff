@@ -63,3 +63,6 @@ INSERT INTO signatures (first, last, signature) VALUES (Brian, Mullin, Infinite)
 
 INSERT INTO signatures (first, last, signature) VALUES ('Brian', 'Mullin', 'Infinite'
 );
+
+ALTER SEQUENCE users_id_seq RESTART WITH 1
+ALTER SEQUENCE signatures_id_seq RESTART WITH 1

@@ -11,25 +11,23 @@
         <h1> PETITION TO IMPROVE THE DISCOURSE</h1>
         <br>
 
-        <h2> Have you <span style="font-style: italic"> REGISTERED? </span> </h2>
+        <h2> You may <span style="font-style: italic"> log in here. </span> </h2>
 <br><br>
 
         {{#if errorMessage}}
-           <h2>{{errorMessage}}</h2>
+           <h2>Invalid email or password.</h2>
          {{/if}}
         <form method="POST" class ="form">
             <div class="registration-fields">
-                <label> First Name <input type="TEXT" name="FirstName" id="firstname" value="{{firstName}}">  </label>
-                <label> Last Name <input type="TEXT" name="LastName" id="lastname" value="{{lastName}}"> </label>
                 <label> Email Address <input type="TEXT" name="EmailAddress" id="emailaddress" value="{{emailAddress}}">  </label>
                 <label> Password <input type="password" name="Password" id="password">  </label>
             </div>
             <div class="buttons">
-                <button type="submit">Create Account</button>
+                <button type="submit">Login NOW</button>
             </div>
         </form>
         <br>
-        <h3> Already have an account? <a style="font-style: italic" href="/login"> log in here</a>.</h3>
+        <a href="/register"> back to register </a>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="script.js" charset="utf-8"></script>
     </body>

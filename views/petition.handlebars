@@ -23,24 +23,22 @@
 
 </p>
 <br><br>
-
+        <h1> WELCOME {{firstName}} {{lastName}}. WILL YOU SIGN? </h1>
         {{#if errorMessage}}
            <h2>{{errorMessage}}</h2>
          {{/if}}
         <form method="POST">
-            <div class="names">
-                <label> First Name <input type="TEXT" name="FirstName" id="firstname">  </label>
-                <label> Last Name <input type="TEXT" name="LastName" id="lastname"> </label>
-            </div>
             <input type="hidden" name ="sig" id="siginput">
             <canvas id="canvas" height="100px" width ="600px"></canvas>
-            <div> Your Signature Here </div>
+            <div> SIGN Your Signature Here FOR GREAT JUSTICE </div>
             <div class="buttons">
-                <button type="submit">SUBMIT</button>
-                <button type="reset" id="reset">CLEAR ALL</button>
                 <button type="button" id="reset2">CLEAR SIGNATURE</button>
+                <button type="submit">SUBMIT</button>
             </div>
         </form>
+        <br>
+        <br>
+        <a href="/logout"> logout </a>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="script.js" charset="utf-8"></script>
     </body>
