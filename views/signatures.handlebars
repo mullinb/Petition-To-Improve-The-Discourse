@@ -1,17 +1,11 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="/stylesheet.css">
-    </head>
-    <body>
-        <ul>
-            {{#each signatures}}
-                <li>{{this.first}}  {{this.last}}</li>
-            {{/each}}
-        </ul>
-    </body>
-    <a href="/logout"> logout </a>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="/script.js" charset="utf-8"></script>
-</html>
+{{#if city}}
+    These are the signatures from {{city}}.
+{{/if}}
+
+<ul>
+    {{#each signatures}}
+        <li>{{#if this.url}}<a href="{{this.url}}">{{/if}} {{this.firstname}}  {{this.lastname}}</a>{{#if this.age}}, {{this.age}} years of age{{/if}}{{#if ../city}}.{{/if}}{{#unless ../city}}{{#if this.city}}, from <a href="signatures/{{this.city}}"> {{this.city}}</a>. {{/if}}{{/unless}} </li>
+    {{/each}}
+</ul>
+<a href="/logout"> logout </a>
+<a href="/userprofile/manage"> Manage profile </a>

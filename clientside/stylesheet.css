@@ -15,8 +15,10 @@ body {
     width: 1000px;
     background-color: lightblue;
 }
+
 h1 {
 }
+
 canvas {
     border: 4px solid black;
     margin-top: 25px;
@@ -65,7 +67,23 @@ input {
     margin: auto 0;
 }
 
+.registration-fields2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-auto-flow: row;
+    margin: auto 0;
+}
+
 .registration-fields label {
+    margin: auto;
+    display: inline-block;
+    width: 10em;
+    padding-top: 3.5em;
+    text-align: center;
+}
+
+.registration-fields2 label {
     margin: auto;
   display: inline-block;
   width: 10em;
@@ -80,6 +98,12 @@ input {
 
 .signage label {
     padding-top: 5em;
+}
+
+.entry {
+    width: 300px;
+    margin: 0 auto;
+    font-size: 20px;
 }
 
 #firstname {
@@ -105,6 +129,7 @@ input {
 
 .buttons {
     padding-top: 40px;
+    text-align: center;
 }
 
 .buttons button {

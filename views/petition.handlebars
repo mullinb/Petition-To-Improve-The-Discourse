@@ -1,45 +1,36 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="stylesheet.css">
-        <title>
-            IMPROVE THE DISCOURSE
-        </title>
-    </head>
-    <body>
-        <h1> PETITION TO IMPROVE THE DISCOURSE</h1>
-        <br>
 
-        <h2> We the undersigned do believe and assert:</h2>
+ <div>
 
-<ul><li> The jargon and the feels have harmed the content of the discourse. </li>
-<li> The freedom and the series of tubes have bloated the size of the discourse. </li>
-<li> The elite devolution and concurrent rise of plebes has corrupted the morality of the discourse. </li>
+    <br>
 
-</ul>
-<br>
-<p style="font-style: italic"> We the undersigned herewith petition and demand that the discourse be improved; improved and improved mightily, without further delay; should we fail in sufficiently undersigning, or otherwise shall the petitioned neglect the necessary discourse improvements, shall this world fall into disrepair. Verily, we thus also demand return to hereditary monarchy, that guard against such shameful neglect as this.
+    <h2> We the undersigned do believe and assert:</h2>
 
-</p>
-<br><br>
-        <h1> WELCOME {{firstName}} {{lastName}}. WILL YOU SIGN? </h1>
-        {{#if errorMessage}}
-           <h2>{{errorMessage}}</h2>
-         {{/if}}
-        <form method="POST">
-            <input type="hidden" name ="sig" id="siginput">
-            <canvas id="canvas" height="100px" width ="600px"></canvas>
-            <div> SIGN Your Signature Here FOR GREAT JUSTICE </div>
-            <div class="buttons">
-                <button type="button" id="reset2">CLEAR SIGNATURE</button>
-                <button type="submit">SUBMIT</button>
-            </div>
-        </form>
-        <br>
-        <br>
-        <a href="/logout"> logout </a>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-        <script src="script.js" charset="utf-8"></script>
-    </body>
-</html>
+    <ul>
+        <li> The jargon and the feels have harmed the content of the discourse. </li>
+        <li> The freedom and the series of tubes have bloated the size of the discourse. </li>
+        <li> The elite devolution and concurrent rise of plebes has corrupted the morality of the discourse. </li>
+    </ul>
+    <br>
+    <p style="font-style: italic"> We the undersigned herewith petition and demand that the discourse be improved; improved and improved mightily, without further delay; should we fail in sufficiently undersigning, or otherwise shall the petitioned neglect the necessary discourse improvements, shall this world fall into disrepair. Verily, we thus also demand return to hereditary monarchy, that guard against such shameful neglect as this.
+    </p>
+    <br>
+    <br>
+    <h1> WELCOME {{firstName}} {{lastName}}. WILL YOU SIGN? </h1>
+    {{#if errorMessage}}
+       <h2>{{errorMessage}}</h2>
+     {{/if}}
+    <form method="POST">
+        {{> csrf}}
+        <input type="hidden" name ="sig" id="siginput">
+        <canvas id="canvas" height="100px" width ="600px"></canvas>
+        <div> SIGN Your Signature Here FOR GREAT JUSTICE </div>
+        <div class="buttons">
+            <button type="button" id="reset2">CLEAR SIGNATURE</button>
+            <button type="submit">SUBMIT</button>
+        </div>
+    </form>
+    <br>
+    <br>
+    <a href="/logout"> logout </a>
+    <a href="/userprofile/manage"> Manage profile </a>
+</div>

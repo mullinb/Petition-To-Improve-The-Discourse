@@ -16,7 +16,7 @@ $('#canvas').on("mousedown", function(e) {
             e.preventDefault();
             (function(context) {
                 context.strokeStyle = '#19131';
-                context.lineTo(e.clientX - canvas.offsetLeft, e.clientY-canvas.offsetTop);
+                context.lineTo(e.pageX - canvas.offsetLeft, e.pageY-canvas.offsetTop);
                 context.stroke();
             }(context));
         })

@@ -1,36 +1,25 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="stylesheet.css">
-        <title>
-            IMPROVE THE DISCOURSE
-        </title>
-    </head>
-    <body class="petitionpage">
-        <h1> PETITION TO IMPROVE THE DISCOURSE</h1>
-        <br>
-
-        <h2> Have you <span style="font-style: italic"> REGISTERED? </span> </h2>
-<br><br>
-
-        {{#if errorMessage}}
-           <h2>{{errorMessage}}</h2>
-         {{/if}}
-        <form method="POST" class ="form">
-            <div class="registration-fields">
-                <label> First Name <input type="TEXT" name="FirstName" id="firstname" value="{{firstName}}">  </label>
-                <label> Last Name <input type="TEXT" name="LastName" id="lastname" value="{{lastName}}"> </label>
-                <label> Email Address <input type="TEXT" name="EmailAddress" id="emailaddress" value="{{emailAddress}}">  </label>
-                <label> Password <input type="password" name="Password" id="password">  </label>
-            </div>
-            <div class="buttons">
-                <button type="submit">Create Account</button>
-            </div>
-        </form>
-        <br>
-        <h3> Already have an account? <a style="font-style: italic" href="/login"> log in here</a>.</h3>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-        <script src="script.js" charset="utf-8"></script>
-    </body>
-</html>
+<div class="petitionpage">
+    <br>
+    <h2> Have you <span style="font-style: italic"> REGISTERED? </span> </h2>
+    <br>
+    <br>
+    {{#if errorMessage}}
+       <h2>{{errorMessage}}</h2>
+     {{/if}}
+    <form method="POST" class ="form">
+        {{> csrf}}
+        <div class="registration-fields">
+            <label> First Name <input type="TEXT" name="FirstName" class="entry" value="{{firstName}}">  </label>
+            <label> Last Name <input type="TEXT" name="LastName" class="entry" value="{{lastName}}"> </label>
+            <label> Email Address <input type="TEXT" name="EmailAddress" class="entry" value="{{emailAddress}}">  </label>
+            <label> Password <input type="password" name="Password" class="entry">  </label>
+        </div>
+        <div class="buttons">
+            <button type="submit">Create Account</button>
+        </div>
+    </form>
+    <br>
+    <h3> Already have an account? <a style="font-style: italic" href="/login"> log in here</a>.</h3>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="script.js" charset="utf-8"></script>
+</div>

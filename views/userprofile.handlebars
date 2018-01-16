@@ -1,0 +1,35 @@
+<br>
+
+
+{{#unless message}}
+<h1> Welcome, {{profile.firstname}} {{profile.lastname}}. You are logged in using your email, {{profile.email}}.
+<h2> Please enter the information below! It is not required. Please enter it anyway. </h2>
+<br>
+
+<form method="POST" class ="form">
+    {{> csrf}}
+    <div class="registration-fields">
+        {{> extrainfo}}
+    </div>
+    <div class="buttons">
+        <button type="submit">Submit</button>
+    </div>
+</form>
+<br>
+{{/unless}}
+{{#if message}}
+    {{message}}, {{profile.firstname}} {{profile.lastname}}.
+    {{#if ../HasSigned}}
+        <p> You have already signed the petition. You may view your <a href="/thanks/">signature</a> or see the <a href="/signatures">list of other signees.</a> </p>
+    {{/if}}
+    {{#unless ../HasSigned}}
+        You have not yet signed the petition. View it <a href="/sign">here</a>.
+    {{/unless}}
+{{/if}}
+
+
+<br>
+<a href="/logout">Log out</a>
+<br>
+<br>
+<a href="userprofile/manage">Manage profile</a>
