@@ -36,7 +36,6 @@ app.use(csurf());
 app.use(cookieParser());
 
 //===============ROUTES==========//
-
     //=============entry routes=======//
 
 app.use(express.static('clientside'));
