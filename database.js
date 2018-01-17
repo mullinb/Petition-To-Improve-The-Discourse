@@ -88,7 +88,6 @@ exports.allRegisterFieldsManage = (req, res, next) => {
         if (missing.length > 0) {
             exports.getUserProfile(req.session.user.userId)
             .then((results) => {
-                console.log(results);
                 res.render('manageprofile', {
                     csrfToken: req.csrfToken(),
                     message: `You did not enter any data for ${missing}. This data is required. All fields have been reset to their previous values.`,
@@ -186,7 +185,6 @@ exports.attachRegistrationInfo = (userId, req, res) => {
 }
 
 exports.attachLoginInfo = (results, req, res) => {
-    console.log(results);
     req.session.user = {
         loggedIn: true,
         firstName: results[0].rows[0].firstname,
@@ -198,14 +196,13 @@ exports.attachLoginInfo = (results, req, res) => {
     try {
         req.session.signatureId = results[1].rows[0].id;
         req.session.hasSigned = true;
-    } catch(e) {
-        console.log(e);
+    } catch(err) {
+        console.log(err);
         req.session.hasSigned = false;
     }
 }
 
 exports.attachUpdatedInfo = (results, req, res) => {
-    console.log(results);
     req.session.user = {
         loggedIn: true,
         firstName: results.firstname,
@@ -255,19 +252,10 @@ exports.updateUserProfile = ({age, city, homepage}, userid) => {
     )
 }
 
-exports.updateUser = ({FirstName, LastName, EmailAddress, Password}, userid) => {
-    if (Password.length > 0) {
-        return exports.hashPassword(Password)
-        .then((hash) => {
-            return db.query(
-                `UPDATE users SET firstname = $1, lastname = $2, email = $3, hashpass = $4 WHERE id = $5;`, [FirstName, LastName, EmailAddress, hash, userid]
-            )
-        })
-    } else {
-        return db.query(
-            `UPDATE users SET firstname = $1, lastname = $2, email = $3 WHERE id = $4;`, [FirstName, LastName, EmailAddress, userid]
-        )
-    }
+exports.updateUser = ({FirstName, LastName, EmailAddress}, userid) => {
+    return db.query(
+        `UPDATE users SET firstname = $1, lastname = $2, email = $3 WHERE id = $4;`, [FirstName, LastName, EmailAddress, userid]
+    )
 }
 
 exports.getUserProfile = (userId) => {
@@ -285,28 +273,55 @@ exports.getUserProfile = (userId) => {
     }
 }
 
-exports.updatePassword = (EmailAddress, Password) => {
-    let userId;
+exports.checkAndUpdatePassword = (req, res) => {
     return db.query(
-        `SELECT * FROM users WHERE Email = $1`, [EmailAddress]
+        `SELECT * FROM users WHERE Email = $1`, [req.session.user.emailAddress]
     ).then((results) => {
-        userId = results.rows[0].id;
-        return exports.checkPassword(Password, results.rows[0].hashpass);
+        return exports.checkPassword(req.body.oldpassword, results.rows[0].hashpass);
     })
     .then((results) => {
+        console.log(results);
         if(results) {
-            return Promise.all([
-                db.query(
-                    `SELECT * FROM users WHERE Email = $1`, [EmailAddress]),
-                db.query(
-                    `SELECT * FROM signatures WHERE user_id = $1`, [userId])
-                ])
+            if (req.body.newpasswordone === req.body.newpasswordtwo) {
+                return exports.hashPassword(req.body.newpasswordone)
+                .then((hash) => {
+                    return db.query(
+                        `UPDATE users SET hashpass = $1 WHERE Email = $2`, [hash, req.session.user.emailAddress]
+                    )
+                }).then(() => {
+                    return exports.getUserProfile(req.session.user.userId)
+                }).then((results) => {
+                    res.render('userprofile', {
+                        updated: true,
+                        message: "Thanks for updating your profile",
+                        profile: results,
+                        hasSigned: req.session.hasSigned,
+                        csrfToken: req.csrfToken(),
+                        manageLink: true
+                    })
+                })
+            } else {
+                return exports.getUserProfile(req.session.user.userId)
+                .then((results) => {
+                    res.render('password', {
+                        errorMessage: "New password fields do not match. Please re-enter.",
+                        profile: results,
+                        hasSigned: req.session.hasSigned,
+                        csrfToken: req.csrfToken()
+                    });
+                })
+            }
         } else {
-            throw new Error;
+            return exports.getUserProfile(req.session.user.userId)
+            .then((results) => {
+                res.render('password', {
+                    errorMessage: "Your old password was not correct. Please re-enter.",
+                    profile: results,
+                    hasSigned: req.session.hasSigned,
+                    csrfToken: req.csrfToken()
+                });
+            })
         }
-    })
-    .catch((err) => {
-        console.log(err);
     })
 }
 

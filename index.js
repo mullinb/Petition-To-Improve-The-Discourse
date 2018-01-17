@@ -12,11 +12,13 @@ var cookieSession = require('cookie-session');
 const dtb = require('./database.js');
 
 app.use(cookieSession({
-    secret: 'anyColourYouLike12345',
+    secret: process.env.SESSION_SECRET || secrets.sessionSecret,
     maxAge: 1000 * 60 * 60 * 24 * 28
 }));
 
-let db = spicedPg(`postgres:${secrets.dbUser}@localhost:5432/petitionITD`);
+let dbUrl = process.env.DATABASE_URL || `postgres:${secrets.dbUser}@localhost:5432/petitionITD`;
+
+let db = spicedPg(dbUrl);
 
 app.engine('handlebars', hb({
     defaultLayout: "layout"
@@ -40,7 +42,6 @@ app.use(cookieParser());
 app.use(express.static('clientside'));
 
 app.get('/', (req, res) => {
-    console.log(req.session)
     if (!req.session.hasSigned && !req.session.user) {
         res.redirect('/register');
     } else if (req.session.hasSigned && req.session.user.loggedIn) {
@@ -182,7 +183,6 @@ app.post("/userprofile/manage", dtb.requireLogin, dtb.allRegisterFieldsManage, (
 });
 
 app.get("/userprofile/password", dtb.requireLogin, (req, res) => {
-    console.log(req.session.user.userId);
     dtb.getUserProfile(req.session.user.userId)
     .then((results) => {
         res.render('password', {
@@ -195,16 +195,12 @@ app.get("/userprofile/password", dtb.requireLogin, (req, res) => {
 });
 
 app.post("/userprofile/password", dtb.requireLogin, (req, res) => {
-    console.log(req.session.user.userId);
-    dtb.getUserProfile(req.session.user.userId)
-    .then((results) => {
-        res.render('password', {
-            profile: results,
-            hasSigned: req.session.hasSigned,
-            csrfToken: req.csrfToken()
-        });
+    dtb.checkAndUpdatePassword(req, res)
+    .catch((err) => {
+        res.redirect("/invalid")
+            console.log(err);
     })
-});
+})
 
 //=============signing/signatures routes=======//
 
@@ -327,4 +323,4 @@ app.get("*", (req, res) => {
     })
 })
 
-app.listen(8080, console.log("server is listening"));
+app.listen(process.env.PORT || 8080, console.log("server is listening"));

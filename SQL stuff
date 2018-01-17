@@ -45,13 +45,17 @@ CREATE TABLE signatures (
 
 id (the primary key), first name, last name, email address, and the hashed password.
 
+DROP TABLE users;
+DROP TABLE signatures;
+DROP TABLE user_profiles;
+
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     FirstName VARCHAR(300) NOT NULL,
     LastName VARCHAR(300) NOT NULL,
     Email VARCHAR(300) NOT NULL UNIQUE,
     HashPass VARCHAR(320) NOT NULL,
-    DateCreated timestamptz NOT NULL,
+    DateCreated timestamptz NOT NULL
 );
 
 CREATE TABLE signatures (
