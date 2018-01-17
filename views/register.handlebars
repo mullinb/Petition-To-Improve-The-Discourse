@@ -9,9 +9,7 @@
     <form method="POST" class ="form">
         {{> csrf}}
         <div class="registration-fields">
-            <label> First Name <input type="TEXT" name="FirstName" class="entry" value="{{firstName}}">  </label>
-            <label> Last Name <input type="TEXT" name="LastName" class="entry" value="{{lastName}}"> </label>
-            <label> Email Address <input type="TEXT" name="EmailAddress" class="entry" value="{{emailAddress}}">  </label>
+            {{> basicinfo}}
             <label> Password <input type="password" name="Password" class="entry">  </label>
         </div>
         <div class="buttons">

@@ -1,11 +1,14 @@
 {{#if city}}
-    These are the signatures from {{city}}.
+    <h2>These are the signatures from {{city}}.<br>Return to see all signatures <a href="/signatures">here</a>.</h2>
 {{/if}}
+
+{{#unless city}}
+    <h2>These are the names of those who have signed this very important petition.</h2>
+{{/unless}}
 
 <ul>
     {{#each signatures}}
         <li>{{#if this.url}}<a href="{{this.url}}">{{/if}} {{this.firstname}}  {{this.lastname}}</a>{{#if this.age}}, {{this.age}} years of age{{/if}}{{#if ../city}}.{{/if}}{{#unless ../city}}{{#if this.city}}, from <a href="signatures/{{this.city}}"> {{this.city}}</a>. {{/if}}{{/unless}} </li>
     {{/each}}
 </ul>
-<a href="/logout"> logout </a>
-<a href="/userprofile/manage"> Manage profile </a>
+{{> footer}}

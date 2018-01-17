@@ -26,12 +26,12 @@ exports.requireSignature = (req, res, next) => {
     db.query(
         `SELECT * FROM signatures WHERE user_id = $1`, [req.session.user.userId])
     .then((results) => {
-        if (results) {
+        if (results.rows[0]) {
             next();
         }
     })
     .catch((err) => {
-        res.redirect('/');
+        console.log(err);
     })
 }
 
@@ -139,12 +139,10 @@ exports.registerUser = ({FirstName, LastName, EmailAddress, Password}) => {
         .then((hash) => {
             return db.query(
             `INSERT INTO users (FirstName, LastName, Email, HashPass, datecreated) VALUES ($1, $2, $3, $4, $5) RETURNING id`, [FirstName, LastName, EmailAddress, hash, new Date()])
-                .then((results) => {
-                    return results.rows[0].id;
-                })
+
     })
-    .catch((err) => {
-        return(err);
+    .then((results) => {
+        return results.rows[0].id;
     })
 }
 
@@ -286,6 +284,32 @@ exports.getUserProfile = (userId) => {
         )
     }
 }
+
+exports.updatePassword = (EmailAddress, Password) => {
+    let userId;
+    return db.query(
+        `SELECT * FROM users WHERE Email = $1`, [EmailAddress]
+    ).then((results) => {
+        userId = results.rows[0].id;
+        return exports.checkPassword(Password, results.rows[0].hashpass);
+    })
+    .then((results) => {
+        if(results) {
+            return Promise.all([
+                db.query(
+                    `SELECT * FROM users WHERE Email = $1`, [EmailAddress]),
+                db.query(
+                    `SELECT * FROM signatures WHERE user_id = $1`, [userId])
+                ])
+        } else {
+            throw new Error;
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+}
+
 
 exports.hashPassword = (plainTextPassword) => {
     return new Promise(function(resolve, reject) {

@@ -25,7 +25,6 @@ app.engine('handlebars', hb({
 
 app.set('view engine', 'handlebars');
 
-
 app.use(bodyParser.urlencoded({
     extended: false
 }));
@@ -34,10 +33,9 @@ app.use(csurf());
 
 app.use(cookieParser());
 
+//===============ROUTES==========//
 
-const pages = ['register', 'login', 'sign', 'thanks', 'signatures'];
-
-//===============SERVER==========//
+    //=============entry routes=======//
 
 app.use(express.static('clientside'));
 
@@ -75,7 +73,6 @@ app.get('/register', (req, res) => {
     }
 })
 
-
 app.post('/register', dtb.allRegisterFields, (req, res) => {
     dtb.registerUser(req.body)
         .then((userId) => {
@@ -83,8 +80,9 @@ app.post('/register', dtb.allRegisterFields, (req, res) => {
             res.redirect('/userprofile');
         })
         .catch((err) => {
+            console.log(err);
             res.render('register', {
-                errorMessage: "That was an invalid entry, please try again!",
+                errorMessage: "That email is already taken, please try another!",
                 csrfToken: req.csrfToken()
             })
         })
@@ -95,7 +93,6 @@ app.get('/login', dtb.requireLogout, (req, res) => {
         csrfToken: req.csrfToken()
     });
 })
-
 
 app.post('/login', (req, res) => {
     dtb.loginUser(req.body)
@@ -112,13 +109,16 @@ app.post('/login', (req, res) => {
     })
 })
 
+//=============profile routes=======//
+
 app.get('/userprofile', dtb.requireLogin, (req, res) => {
     dtb.getUserProfile(req.session.user.userId)
     .then((results) => {
         res.render('userprofile', {
             profile: results,
             hasSigned: req.session.hasSigned,
-            csrfToken: req.csrfToken()
+            csrfToken: req.csrfToken(),
+            manageLink: true
         });
     })
 })
@@ -126,22 +126,23 @@ app.get('/userprofile', dtb.requireLogin, (req, res) => {
 app.post('/userprofile', dtb.requireLogin, (req, res) => {
     dtb.updateUserProfile(req.body, req.session.user.userId)
         .then((results) => {
-            res.redirect('/userupdated');
+            res.redirect('/userprofile/updated');
         })
         .catch((err) => {
             res.redirect('userprofile');
         })
 })
 
-
-app.get('/userupdated', dtb.requireLogin, (req, res) => {
+app.get('/userprofile/updated', dtb.requireLogin, (req, res) => {
     dtb.getUserProfile(req.session.user.userId)
     .then((results) => {
         res.render('userprofile', {
+            updated: true,
             message: "Thanks for updating your profile",
             profile: results,
             hasSigned: req.session.hasSigned,
-            csrfToken: req.csrfToken()
+            csrfToken: req.csrfToken(),
+            manageLink: true
         });
     })
 });
@@ -150,9 +151,7 @@ app.get("/userprofile/manage", dtb.requireLogin, (req, res) => {
     console.log(req.session.user.userId);
     dtb.getUserProfile(req.session.user.userId)
     .then((results) => {
-        console.log(results);
         res.render('manageprofile', {
-            message: "You may update your profile information here.",
             profile: results,
             hasSigned: req.session.hasSigned,
             csrfToken: req.csrfToken()
@@ -172,7 +171,6 @@ app.post("/userprofile/manage", dtb.requireLogin, dtb.allRegisterFieldsManage, (
         return dtb.attachUpdatedInfo(results, req, res)
     })
     .then((results) => {
-        console.log(results);
         res.render('manageprofile', {
             message: "Thanks for updating your profile!",
             profile: results,
@@ -183,12 +181,40 @@ app.post("/userprofile/manage", dtb.requireLogin, dtb.allRegisterFieldsManage, (
     .catch(err => console.log(err))
 });
 
+app.get("/userprofile/password", dtb.requireLogin, (req, res) => {
+    console.log(req.session.user.userId);
+    dtb.getUserProfile(req.session.user.userId)
+    .then((results) => {
+        res.render('password', {
+            manageLink: true,
+            profile: results,
+            hasSigned: req.session.hasSigned,
+            csrfToken: req.csrfToken()
+        });
+    })
+});
+
+app.post("/userprofile/password", dtb.requireLogin, (req, res) => {
+    console.log(req.session.user.userId);
+    dtb.getUserProfile(req.session.user.userId)
+    .then((results) => {
+        res.render('password', {
+            profile: results,
+            hasSigned: req.session.hasSigned,
+            csrfToken: req.csrfToken()
+        });
+    })
+});
+
+//=============signing/signatures routes=======//
+
 app.get('/sign', dtb.requireLogin, (req, res) => {
     if (!req.session.hasSigned) {
         res.render('petition', {
             firstName: req.session.user.firstName,
             lastName: req.session.user.lastName,
-            csrfToken: req.csrfToken()
+            csrfToken: req.csrfToken(),
+            manageLink: true
         });
     } else if (req.session.user.loggedIn) {
         res.redirect('/thanks');
@@ -201,25 +227,28 @@ app.post('/sign', (req, res) => {
     if (!req.body.sig) {
         res.render('petition', {
             errorMessage: `Please enter your signature if you would like to sign the petition.`,
-            csrfToken: req.csrfToken()
+            csrfToken: req.csrfToken(),
+            manageLink: true
         })
     } else if (req.body.sig) {
         dtb.signPetition(req.session.user, req.body.sig)
         .then((sigId) => {
             req.session.signatureId = sigId;
-            req.session.hasSigned = true;
+            req.session.hasSigned = true
             res.redirect('/thanks');
         })
         .catch((err) => {
             res.render('petition', {
                 errorMessage: "Petition non funciona!",
-                csrfToken: req.csrfToken()
+                csrfToken: req.csrfToken(),
+                manageLink: true
             })
         })
     } else {
         res.render('petition', {
             errorMessage: "Petition non funciona!",
-            csrfToken: req.csrfToken()
+            csrfToken: req.csrfToken(),
+            manageLink: true
         })
     }
 })
@@ -229,9 +258,11 @@ app.get('/thanks', dtb.requireLogin, dtb.requireSignature, (req, res) => {
         dtb.getSignatures(),
         dtb.joinSigsUsers(req.session.user.userId)
     ]).then((results) => {
+        console.log(results);
         res.render('thanks', {
             numberOfSigs: results[0].rows.length,
-            actualSignature: results[1].rows[req.session.user.userId-1].signature
+            actualSignature: results[1].rows[0].signature,
+            manageLink: true
         })
     })
     .catch((err) => {
@@ -244,13 +275,15 @@ app.get('/signatures', dtb.requireLogin, dtb.requireSignature, (req, res) => {
     dtb.getSignatures()
     .then((results) => {
         res.render('signatures', {
-            signatures: results.rows
+            signatures: results.rows,
+            manageLink: true
         })
     })
     .catch((err) => {
         res.render('signatures', {
             error: "OH NO THERE WAS A PROBLEM ACCESSING THE DIRECTORY",
-            signatures: results.rows
+            signatures: results.rows,
+            manageLink: true
         })
         console.log(err);
     })
@@ -261,13 +294,15 @@ app.get('/signatures/:city', dtb.requireLogin, dtb.requireSignature, (req, res) 
     .then((results) => {
         res.render('signatures', {
             city: req.params.city,
-            signatures: results.rows
+            signatures: results.rows,
+            manageLink: true
         })
     })
     .catch((err) => {
         res.render('signatures', {
             error: "OH NO THERE WAS A PROBLEM ACCESSING THE DIRECTORY",
-            signatures: results.rows
+            signatures: results.rows,
+            manageLink: true
         })
         console.log(err);
     })
@@ -277,15 +312,19 @@ app.get('/thanks/delete', dtb.requireLogin, dtb.requireSignature, (req, res) => 
     req.session.hasSigned = false;
     dtb.deleteSig(req.session.user.userId)
     .then(() => {
-        res.render('delete')
+        res.render('delete', {
+            manageLink: true
+        })
     })
 
 })
 
-app.get("*", (req, res) => {
-        res.render("invalid", {
+    //========general=========//
 
-        })
+app.get("*", (req, res) => {
+    res.render("invalid", {
+        manageLink: true
+    })
 })
 
 app.listen(8080, console.log("server is listening"));
