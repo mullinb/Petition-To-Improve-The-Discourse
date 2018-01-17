@@ -10,12 +10,14 @@ let spicedPg = require('spiced-pg');
 var cookieSession = require('cookie-session');
 const dtb = require('./database.js');
 
+console.log(process.env.NODE_ENV)
+
 app.use(cookieSession({
     secret: process.env.SESSION_SECRET || require('./secrets').sessionSecret,
     maxAge: 1000 * 60 * 60 * 24 * 28
 }));
 
-let dbUrl = process.env.DATABASE_URL || `postgres:${secrets.dbUser}@localhost:5432/petitionITD`;
+let dbUrl = process.env.DATABASE_URL || `postgres:${require('./secrets').dbUser}@localhost:5432/petitionITD`;
 
 let db = spicedPg(dbUrl);
 

@@ -1,6 +1,7 @@
 let spicedPg = require('spiced-pg');
-const secrets = require('./secrets')
-let db = spicedPg(`postgres:${secrets.dbUser}@localhost:5432/petitionITD`);
+
+let dbUrl = process.env.DATABASE_URL || `postgres:${require('./secrets').dbUser}@localhost:5432/petitionITD`;
+
 let bcrypt = require('bcryptjs');
 
 
