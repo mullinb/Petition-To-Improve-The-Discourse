@@ -7,12 +7,11 @@ const csurf = require('csurf');
 const bodyParser = require('body-parser');
 const hb = require('express-handlebars');
 let spicedPg = require('spiced-pg');
-const secrets = require('./secrets')
 var cookieSession = require('cookie-session');
 const dtb = require('./database.js');
 
 app.use(cookieSession({
-    secret: process.env.SESSION_SECRET || secrets.sessionSecret,
+    secret: process.env.SESSION_SECRET || require('./secrets').sessionSecret,
     maxAge: 1000 * 60 * 60 * 24 * 28
 }));
 
