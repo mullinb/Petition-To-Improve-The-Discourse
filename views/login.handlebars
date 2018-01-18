@@ -6,8 +6,8 @@
 <br>
 
 {{#if errorMessage}}
-   <h2>Invalid email or password.</h2>
- {{/if}}
+    <h2>{{errorMessage}}</h2>
+{{/if}}
 <form method="POST" class ="form">
     {{> csrf}}
     <div class="registration-fields">

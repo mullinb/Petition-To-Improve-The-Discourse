@@ -6,6 +6,8 @@ let bcrypt = require('bcryptjs');
 
 let db = spicedPg(dbUrl);
 
+let myRedis = require("./myRedis");
+
 
 exports.requireLogout = (req, res, next) => {
     try {
@@ -116,6 +118,7 @@ exports.signPetition = ({userId}, sig) => {
     return db.query(
         `INSERT INTO signatures (signature, user_id) VALUES ($1, $2) RETURNING id;`, [sig, userId])
         .then((results) => {
+            myRedis.deleteCacheSigs();
             return results.rows[0].id;
         })
         .catch((err) => {
@@ -128,6 +131,7 @@ exports.deleteSig = (userId) => {
     return db.query(
         `DELETE FROM signatures where user_id = $1;`, [userId])
         .then((results) => {
+            myRedis.deleteCacheSigs();
             return results.rows[0].id;
         })
         .catch((err) => {
@@ -155,23 +159,24 @@ exports.loginUser = ({EmailAddress, Password}) => {
     return db.query(
         `SELECT * FROM users WHERE Email = $1`, [EmailAddress]
     ).then((results) => {
-        userId = results.rows[0].id;
-        return exports.checkPassword(Password, results.rows[0].hashpass);
+        if(results.rows.length > 0) {
+            userId = results.rows[0].id;
+            return exports.checkPassword(Password, results.rows[0].hashpass);
+        } else {
+            throw new Error("bad email")
+        }
     })
     .then((results) => {
-        if(results) {
+        if (results) {
             return Promise.all([
                 db.query(
                     `SELECT * FROM users WHERE Email = $1`, [EmailAddress]),
                 db.query(
                     `SELECT * FROM signatures WHERE user_id = $1`, [userId])
-                ])
+            ])
         } else {
-            throw new Error;
+            throw new Error("bad pass");
         }
-    })
-    .catch((err) => {
-        console.log(err);
     })
 }
 
@@ -220,11 +225,11 @@ exports.attachUpdatedInfo = (results, req, res) => {
 exports.getSignatures = (city) => {
     if (city) {
         return db.query(
-            `SELECT users.id, user_profiles.city, user_profiles.age, user_profiles.url, users.FirstName, users.LastName, users.Email FROM user_profiles, signatures, users WHERE user_profiles.user_id = users.id and users.id = signatures.user_id and city = $1`, [city]
+            `SELECT users.id AS user_id, user_profiles.city, user_profiles.age, user_profiles.url, users.FirstName, users.LastName, users.Email FROM user_profiles, signatures, users WHERE user_profiles.user_id = users.id and users.id = signatures.user_id and city = $1`, [city]
         )
     } else {
-    return db.query(
-        `SELECT users.id, user_profiles.city, user_profiles.age, user_profiles.url, users.FirstName, users.LastName, users.Email FROM user_profiles, signatures, users WHERE user_profiles.user_id = users.id and users.id = signatures.user_id;`
+        return db.query(
+            `SELECT users.id, user_profiles.city, user_profiles.age, user_profiles.url, users.FirstName, users.LastName, users.Email FROM user_profiles, signatures, users WHERE user_profiles.user_id = users.id and users.id = signatures.user_id;`
         )
     }
 }
@@ -259,6 +264,7 @@ exports.updateUser = ({FirstName, LastName, EmailAddress}, userid) => {
     return db.query(
         `UPDATE users SET firstname = $1, lastname = $2, email = $3 WHERE id = $4;`, [FirstName, LastName, EmailAddress, userid]
     )
+    .then(myRedis.deleteCacheSigs);
 }
 
 exports.getUserProfile = (userId) => {
@@ -267,6 +273,7 @@ exports.getUserProfile = (userId) => {
             `SELECT * FROM users LEFT JOIN user_profiles ON users.id = user_profiles.user_id WHERE users.id = $1`, [userId]
         )
         .then((results) => {
+            myRedis.deleteCacheSigs();
             return results.rows[0]
         })
     } else {

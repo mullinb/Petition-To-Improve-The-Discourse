@@ -9,6 +9,7 @@ const hb = require('express-handlebars');
 let spicedPg = require('spiced-pg');
 var cookieSession = require('cookie-session');
 const dtb = require('./database.js');
+let myRedis = require("./myRedis");
 
 console.log(process.env.NODE_ENV)
 
@@ -38,6 +39,13 @@ app.use(cookieParser());
 
 //===============ROUTES==========//
     //=============entry routes=======//
+
+app.use((req, res, next) => {
+    if (!req.session.antihack) {
+        req.session.antihack = true;
+    }
+    next();
+})
 
 app.use(express.static('clientside'));
 
@@ -95,19 +103,32 @@ app.get('/login', dtb.requireLogout, (req, res) => {
     });
 })
 
+
 app.post('/login', (req, res) => {
+    console.log("FIRST")
     dtb.loginUser(req.body)
     .then((results) => {
+        console.log("FIFTH");
+        myRedis.deleteHackRecords(req);
         dtb.attachLoginInfo(results, req, res);
         res.redirect('/');
     })
     .catch((err) => {
-        console.log(err);
-        res.render('login', {
-            csrfToken: req.csrfToken(),
-            errorMessage: "Invalid username or password."
-        });
-    })
+        if (err.message === "bad email") {
+            res.render('login', {
+                csrfToken: req.csrfToken(),
+                errorMessage: "No account with that email address exists!"
+            });
+        } else if (err.message === "bad pass") {
+            myRedis.antiHack(req, res);
+        } else {
+            console.log("second else")
+            res.render('login', {
+                csrfToken: req.csrfToken(),
+                errorMessage: "Something went wrong, please try again."
+            });
+        }
+    });
 })
 
 //=============profile routes=======//
@@ -128,6 +149,7 @@ app.post('/userprofile', dtb.requireLogin, (req, res) => {
     dtb.updateUserProfile(req.body, req.session.user.userId)
         .then((results) => {
             res.redirect('/userprofile/updated');
+            myRedis.deleteCacheSigs();
         })
         .catch((err) => {
             res.redirect('userprofile');
@@ -172,6 +194,7 @@ app.post("/userprofile/manage", dtb.requireLogin, dtb.allRegisterFieldsManage, (
         return dtb.attachUpdatedInfo(results, req, res)
     })
     .then((results) => {
+        myRedis.deleteCacheSigs(); //Also deleting within the individual update functions above, in case either fails.
         res.render('manageprofile', {
             message: "Thanks for updating your profile!",
             profile: results,
@@ -197,8 +220,7 @@ app.get("/userprofile/password", dtb.requireLogin, (req, res) => {
 app.post("/userprofile/password", dtb.requireLogin, (req, res) => {
     dtb.checkAndUpdatePassword(req, res)
     .catch((err) => {
-        res.redirect("/invalid")
-            console.log(err);
+        console.log(err);
     })
 })
 
@@ -229,6 +251,7 @@ app.post('/sign', (req, res) => {
     } else if (req.body.sig) {
         dtb.signPetition(req.session.user, req.body.sig)
         .then((sigId) => {
+            myRedis.deleteCacheSigs();
             req.session.signatureId = sigId;
             req.session.hasSigned = true
             res.redirect('/thanks');
@@ -268,12 +291,32 @@ app.get('/thanks', dtb.requireLogin, dtb.requireSignature, (req, res) => {
 })
 
 app.get('/signatures', dtb.requireLogin, dtb.requireSignature, (req, res) => {
-    dtb.getSignatures()
-    .then((results) => {
-        res.render('signatures', {
-            signatures: results.rows,
-            manageLink: true
-        })
+    myRedis.checkCacheSigs()
+    .then((result) => {
+        console.log(result);
+        if (result !== null) {
+            res.render('signatures', {
+                signatures: JSON.parse(result),
+                manageLink: true
+            })
+        } else {
+            dtb.getSignatures()
+            .then((results) => {
+                myRedis.setCacheSigs("signatures", JSON.stringify(results.rows));
+                res.render('signatures', {
+                    signatures: results.rows,
+                    manageLink: true
+                })
+            })
+            .catch((err) => {
+                res.render('signatures', {
+                    error: "OH NO THERE WAS A PROBLEM ACCESSING THE DIRECTORY",
+                    signatures: results.rows,
+                    manageLink: true
+                })
+                console.log(err);
+            })
+        }
     })
     .catch((err) => {
         res.render('signatures', {
@@ -288,6 +331,7 @@ app.get('/signatures', dtb.requireLogin, dtb.requireSignature, (req, res) => {
 app.get('/signatures/:city', dtb.requireLogin, dtb.requireSignature, (req, res) => {
     dtb.getSignatures(req.params.city)
     .then((results) => {
+
         res.render('signatures', {
             city: req.params.city,
             signatures: results.rows,
@@ -312,7 +356,6 @@ app.get('/thanks/delete', dtb.requireLogin, dtb.requireSignature, (req, res) => 
             manageLink: true
         })
     })
-
 })
 
     //========general=========//
