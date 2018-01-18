@@ -4,6 +4,8 @@ let dbUrl = process.env.DATABASE_URL || `postgres:${require('./secrets').dbUser}
 
 let bcrypt = require('bcryptjs');
 
+let db = spicedPg(dbUrl);
+
 
 exports.requireLogout = (req, res, next) => {
     try {
