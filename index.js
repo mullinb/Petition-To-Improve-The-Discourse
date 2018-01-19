@@ -22,8 +22,8 @@ if(process.env.REDIS_URL){
    };
 } else {
    store = {
-       ttl: 3600, //time to live
-       host: host,
+       ttl: 3600,
+       host: "localhost",
        port: 6379
    };
 }
