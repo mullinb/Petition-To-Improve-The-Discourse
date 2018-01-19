@@ -1,5 +1,5 @@
 let redis = require('redis');
-let client = redis.createClient({
+let client = redis.createClient(process.env.REDIS_URL || {
     host: 'localhost',
     port: 6379
 });

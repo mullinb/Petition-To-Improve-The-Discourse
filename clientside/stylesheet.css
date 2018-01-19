@@ -6,14 +6,14 @@
 .petitionpage {
     margin: auto;
     width: 1000px;
-    background-color: lightblue;
     text-align: center;
 }
 
 body {
     margin: auto;
     width: 1000px;
-    background-color: lightblue;
+    background-image: url("beer.jpg");
+    background-size: cover;
 }
 
 h1 {
@@ -26,6 +26,19 @@ canvas {
     background-color: white;
     position: relative;
     top: -.2em;
+    box-shadow: 0px 0px 30px 8px white;
+}
+
+ul {
+    background-color: white;
+    box-shadow: 0px 0px 30px 8px white;
+    border-radius: 5px;
+}
+
+p {
+    background-color: white;
+    box-shadow: 0px 0px 30px 8px white;
+    border-radius: 5px;
 }
 
 input {

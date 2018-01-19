@@ -8,7 +8,7 @@
 
 <ul>
     {{#each signatures}}
-        <li>{{#if this.url}}<a href="{{this.url}}">{{/if}} {{this.firstname}}  {{this.lastname}}</a>{{#if this.age}}, {{this.age}} years of age{{/if}}{{#if ../city}}.{{/if}}{{#unless ../city}}{{#if this.city}}, from <a href="signatures/{{this.city}}"> {{this.city}}</a>. {{/if}}{{/unless}} </li>
+        <li>{{#if this.url}}<a href="{{this.url}}">{{/if}} {{this.firstname}}  {{this.lastname}}</a>{{#if this.age}}, {{this.age}} years of age{{/if}}{{#if ../city}}.{{/if}}{{#unless ../city}}{{#if this.city}}, from <a href="/signatures/list/{{this.city}}"> {{this.city}}</a>. {{/if}}{{/unless}} </li>
     {{/each}}
 </ul>
 {{> footer}}
