@@ -3,13 +3,14 @@ let client = redis.createClient(process.env.REDIS_URL || {
     host: 'localhost',
     port: 6379
 });
+
 let spicedPg = require('spiced-pg');
 
 let dbUrl = process.env.DATABASE_URL || `postgres:${require('./secrets').dbUser}@localhost:5432/petitionITD`;
 
 let db = spicedPg(dbUrl);
 
-const promisify = require('util').promisify;
+const { promisify } = require('util');
 
 const setex = promisify(client.setex.bind(client));
 const set = promisify(client.set.bind(client));
