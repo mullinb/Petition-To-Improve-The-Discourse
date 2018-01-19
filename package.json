@@ -12,7 +12,7 @@
     "url": "git+https://github.com/spicedacademy/petition.git"
   },
   "engines": {
-    "node": "6.11.0"
+    "node": "8.9.4"
   },
   "author": "",
   "license": "ISC",
@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/spicedacademy/petition#readme",
   "dependencies": {
+    "@google/maps": "^0.4.5",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.15.2",
     "connect-redis": "^3.3.3",
@@ -31,7 +32,6 @@
     "express-handlebars": "^3.0.0",
     "express-session": "^1.15.6",
     "redis": "^2.6.2",
-    "spiced-pg": "spicedacademy/spiced-pg",
-    "util": "^0.10.3"
+    "spiced-pg": "spicedacademy/spiced-pg"
   }
 }

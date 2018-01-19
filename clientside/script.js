@@ -38,6 +38,8 @@ $('#reset2').on('click', function(e) {
     $("#siginput").val('');
 })
 
+
+$('#cityinput').on()
 // $(document).ready(function(e) {
 //     if ($("#canvasDisplay").length) {
 //         console.log($('#image'))
