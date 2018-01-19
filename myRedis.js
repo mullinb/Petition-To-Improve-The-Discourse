@@ -9,7 +9,7 @@ let dbUrl = process.env.DATABASE_URL || `postgres:${require('./secrets').dbUser}
 
 let db = spicedPg(dbUrl);
 
-const {promisify} = require('util');
+const promisify = require('util').promisify;
 
 const setex = promisify(client.setex.bind(client));
 const set = promisify(client.set.bind(client));
