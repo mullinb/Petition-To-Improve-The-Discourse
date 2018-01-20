@@ -22,18 +22,14 @@
 
     function checkLoginState() {
         FB.getLoginStatus(function(response) {
-        console.log(response.authResponse.accessToken)
-        // $.ajax({
-        //     url: "/facebook",
-        //     data: {
-        //         q: value,
-        //         type: select
-        //     }, success: function(data) {
-        //         console.log(data);
-        //         // data = data.artists || data.albums;
-        //         var items = data.items;
-        //         var html = ''
-        //         document.getElementById("results").innerHTML = Handle
+            console.log(response.authResponse.accessToken);
+            $.ajax({
+                url: "/facebook",
+                data: {
+                    fbAccessToken: response.authResponse.accessToken
+                }, success: function(data) {
+                    console.log(data);
+            })
         })
     }
 
