@@ -30,6 +30,7 @@
     "csurf": "^1.9.0",
     "email-verification": "^0.4.6",
     "express": "^4.14.0",
+    "express-force-https": "^1.0.0",
     "express-handlebars": "^3.0.0",
     "express-session": "^1.15.6",
     "heroku-ssl-redirect": "0.0.4",
