@@ -61,8 +61,15 @@ app.use(csurf());
 app.use(express.static('clientside'));
 
 app.get('/', (req, res) => {
+    console.log(req.session);
+    if (req.session.loggedOut) {
+        res.render("landing", {
+            errorMessage: "You are logged out."
+        });
+    }
     if (!req.session.hasSigned && !req.session.user) {
-        res.redirect('/register');
+        console.log('trying')
+        res.render("landing")
     } else if (req.session.hasSigned && req.session.user.loggedIn) {
         res.redirect('/signatures/thanks');
     } else if (req.session.user.loggedIn) {
@@ -72,10 +79,10 @@ app.get('/', (req, res) => {
 
 app.get('/logout', (req, res) => {
     req.session.destroy();
-    res.redirect('/register');
+    res.render("logout");
 })
 
-app.use("/register", registration);
+app.use("/arrival", registration);
 app.use("/userprofile", userprofile);
 app.use("/signatures", signatures);
 

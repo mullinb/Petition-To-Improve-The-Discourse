@@ -15,7 +15,7 @@ let dbUrl = process.env.DATABASE_URL || `postgres:${require('../secrets').dbUser
 let db = spicedPg(dbUrl);
 
 
-router.get('/', dtb.requireLogout, (req, res) => {
+router.get('/register', dtb.requireLogout, (req, res) => {
     try {
         if (!req.session.hasSigned & !req.session.user.loggedIn) {
             res.render('register', {
@@ -33,7 +33,7 @@ router.get('/', dtb.requireLogout, (req, res) => {
     }
 })
 
-router.post('/', dtb.allRegisterFields, dtb.requireLogout, (req, res) => {
+router.post('/register', dtb.allRegisterFields, dtb.requireLogout, (req, res) => {
     dtb.registerUser(req.body)
         .then((userId) => {
             dtb.attachRegistrationInfo(userId, req, res);
