@@ -119,27 +119,6 @@ input {
     font-size: 20px;
 }
 
-#firstname {
-    width: 300px;
-    margin: 0 auto;
-    font-size: 20px;
-}
-#lastname {
-    width: 300px;
-    margin: 0 auto;
-    font-size: 20px;
-}
-#emailaddress {
-    width: 300px;
-    margin: 0 auto;
-    font-size: 20px;
-}
-#password {
-    width: 300px;
-    margin: 0 auto;
-    font-size: 20px;
-}
-
 .buttons {
     padding-top: 40px;
     text-align: center;
@@ -161,4 +140,12 @@ input {
     position: relative;
     top: -111px;
     left: 4px;
+}
+
+/* .mvs.fsl {
+    text-align: center;
+}
+ */
+#spinner {
+    margin: auto;
 }

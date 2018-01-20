@@ -67,7 +67,6 @@ router.get('/thanks', user.requireLogin, dtb.requireSignature, (req, res) => {
         dtb.getSignatures(),
         dtb.joinSigsUsers(req.session.user.userId)
     ]).then((results) => {
-        console.log(results);
         res.render('thanks', {
             numberOfSigs: results[0].rows.length,
             actualSignature: results[1].rows[0].signature,
@@ -83,7 +82,6 @@ router.get('/thanks', user.requireLogin, dtb.requireSignature, (req, res) => {
 router.get('/list', user.requireLogin, dtb.requireSignature, (req, res) => {
     myRedis.checkCacheSigs()
     .then((result) => {
-        console.log(result);
         if (result !== null) {
             res.render('signatures', {
                 signatures: JSON.parse(result),

@@ -54,7 +54,6 @@ router.get('/updated', user.requireLogin, (req, res) => {
 });
 
 router.get("/manage", user.requireLogin, (req, res) => {
-    console.log(req.session.user.userId);
     dtb.getUserProfile(req.session.user.userId)
     .then((results) => {
         res.render('manageprofile', {

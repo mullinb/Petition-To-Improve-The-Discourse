@@ -60,7 +60,7 @@ CREATE TABLE users (
 
 CREATE TABLE signatures (
     id SERIAL PRIMARY KEY,
-    guser_id integer REFERENCES users (id) NOT NULL,
+    user_id integer REFERENCES users (id) NOT NULL,
     signature TEXT NOT NULL
 );
 

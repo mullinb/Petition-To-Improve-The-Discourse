@@ -54,16 +54,13 @@ app.use(bodyParser.urlencoded({
 
 app.use(csurf());
 
-//===============ROUTES==========//
-    //=============entry routes=======//
-
+//==================ROUTES============//
 
 app.use(express.static('clientside'));
 
 app.get('/', (req, res) => {
     console.log(req.session);
     if (!req.session.hasSigned && !req.session.user) {
-        console.log('trying')
         res.render("landing")
     } else if (req.session.hasSigned && req.session.user.loggedIn) {
         res.redirect('/signatures/thanks');
@@ -86,5 +83,7 @@ app.get("*", (req, res) => {
         manageLink: true
     })
 })
+
+//==========ITS ALIVE=========//
 
 app.listen(process.env.PORT || 8080, console.log("server is listening"));
