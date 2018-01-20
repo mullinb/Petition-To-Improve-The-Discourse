@@ -10,6 +10,9 @@ const dtb = require('./models/database.js');
 let myRedis = require("./myRedis");
 var session = require('express-session');
 var Store = require('connect-redis')(session);
+var sslRedirect = require('heroku-ssl-redirect');
+
+app.use(sslRedirect());
 
 let registration = require('./routers/registration')
 let signatures = require('./routers/signatures')
@@ -70,7 +73,7 @@ app.get('/', (req, res) => {
 })
 
 app.get("/facebooklogin", (req, res) => {
-    console.log(req.body);
+    console.log(req.body.fbAccessToken);
     req.session.destroy();
     res.render("logout");
 })
