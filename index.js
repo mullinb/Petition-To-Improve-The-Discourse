@@ -69,6 +69,10 @@ app.get('/', (req, res) => {
     }
 })
 
+app.get("/facebooklogin", (req, res) => {
+    console.log(req.body);
+})
+
 app.get('/logout', (req, res) => {
     req.session.destroy();
     res.render("logout");
