@@ -24,7 +24,7 @@
         FB.getLoginStatus(function(response) {
             console.log(response.authResponse.accessToken);
             $.ajax({
-                url: "/facebook",
+                url: "/facebooklogin",
                 data: {
                     fbAccessToken: response.authResponse.accessToken
                 }, success: function(data) {
