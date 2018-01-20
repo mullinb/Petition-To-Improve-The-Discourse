@@ -5,7 +5,8 @@ module.exports = router;
 const csurf = require('csurf');
 const hb = require('express-handlebars');
 let spicedPg = require('spiced-pg');
-const dtb = require('../database.js');
+const dtb = require('../models/database.js');
+const user = require('../models/user.js')
 let myRedis = require("../myRedis");
 var session = require('express-session');
 var Store = require('connect-redis')(session);
@@ -15,7 +16,7 @@ let dbUrl = process.env.DATABASE_URL || `postgres:${require('../secrets').dbUser
 let db = spicedPg(dbUrl);
 
 
-router.get('/register', dtb.requireLogout, (req, res) => {
+router.get('/register', user.requireLogout, (req, res) => {
     try {
         if (!req.session.hasSigned & !req.session.user.loggedIn) {
             res.render('register', {
@@ -33,10 +34,10 @@ router.get('/register', dtb.requireLogout, (req, res) => {
     }
 })
 
-router.post('/register', dtb.allRegisterFields, dtb.requireLogout, (req, res) => {
+router.post('/register', user.allRegisterFields, user.requireLogout, (req, res) => {
     dtb.registerUser(req.body)
         .then((userId) => {
-            dtb.attachRegistrationInfo(userId, req, res);
+            user.attachRegistrationInfo(userId, req, res);
             res.redirect('/userprofile');
         })
         .catch((err) => {
@@ -48,7 +49,7 @@ router.post('/register', dtb.allRegisterFields, dtb.requireLogout, (req, res) =>
         })
 })
 
-router.get('/login', dtb.requireLogout, (req, res) => {
+router.get('/login', user.requireLogout, (req, res) => {
     res.render('login', {
         csrfToken: req.csrfToken()
     });
@@ -61,7 +62,7 @@ router.post('/login', (req, res) => {
     .then((results) => {
         console.log("FIFTH");
         myRedis.deleteHackRecords(req);
-        dtb.attachLoginInfo(results, req, res);
+        user.attachLoginInfo(results, req, res);
         res.redirect('/');
     })
     .catch((err) => {

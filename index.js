@@ -6,7 +6,7 @@ const csurf = require('csurf');
 const bodyParser = require('body-parser');
 const hb = require('express-handlebars');
 let spicedPg = require('spiced-pg');
-const dtb = require('./database.js');
+const dtb = require('./models/database.js');
 let myRedis = require("./myRedis");
 var session = require('express-session');
 var Store = require('connect-redis')(session);
@@ -62,11 +62,6 @@ app.use(express.static('clientside'));
 
 app.get('/', (req, res) => {
     console.log(req.session);
-    if (req.session.loggedOut) {
-        res.render("landing", {
-            errorMessage: "You are logged out."
-        });
-    }
     if (!req.session.hasSigned && !req.session.user) {
         console.log('trying')
         res.render("landing")

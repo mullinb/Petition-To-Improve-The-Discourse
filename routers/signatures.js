@@ -5,7 +5,8 @@ module.exports = router;
 const csurf = require('csurf');
 const hb = require('express-handlebars');
 let spicedPg = require('spiced-pg');
-const dtb = require('../database.js');
+const dtb = require('../models/database.js');
+const user = require('../models/user.js')
 let myRedis = require("../myRedis");
 var session = require('express-session');
 var Store = require('connect-redis')(session);
@@ -15,7 +16,7 @@ let dbUrl = process.env.DATABASE_URL || `postgres:${require('../secrets').dbUser
 let db = spicedPg(dbUrl);
 
 
-router.get('/sign', dtb.requireLogin, (req, res) => {
+router.get('/sign', user.requireLogin, (req, res) => {
     if (!req.session.hasSigned) {
         res.render('petition', {
             firstName: req.session.user.firstName,
@@ -61,7 +62,7 @@ router.post('/sign', (req, res) => {
     }
 })
 
-router.get('/thanks', dtb.requireLogin, dtb.requireSignature, (req, res) => {
+router.get('/thanks', user.requireLogin, dtb.requireSignature, (req, res) => {
     Promise.all([
         dtb.getSignatures(),
         dtb.joinSigsUsers(req.session.user.userId)
@@ -79,7 +80,7 @@ router.get('/thanks', dtb.requireLogin, dtb.requireSignature, (req, res) => {
     })
 })
 
-router.get('/list', dtb.requireLogin, dtb.requireSignature, (req, res) => {
+router.get('/list', user.requireLogin, dtb.requireSignature, (req, res) => {
     myRedis.checkCacheSigs()
     .then((result) => {
         console.log(result);
@@ -117,7 +118,7 @@ router.get('/list', dtb.requireLogin, dtb.requireSignature, (req, res) => {
     })
 })
 
-router.get('/list/:city', dtb.requireLogin, dtb.requireSignature, (req, res) => {
+router.get('/list/:city', user.requireLogin, dtb.requireSignature, (req, res) => {
     dtb.getSignatures(req.params.city)
     .then((results) => {
 
@@ -137,7 +138,7 @@ router.get('/list/:city', dtb.requireLogin, dtb.requireSignature, (req, res) => 
     })
 })
 
-router.get('/delete', dtb.requireLogin, dtb.requireSignature, (req, res) => {
+router.get('/delete', user.requireLogin, dtb.requireSignature, (req, res) => {
     req.session.hasSigned = false;
     dtb.deleteSig(req.session.user.userId)
     .then(() => {

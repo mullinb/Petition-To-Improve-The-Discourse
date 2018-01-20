@@ -5,7 +5,8 @@ module.exports = router;
 const csurf = require('csurf');
 const hb = require('express-handlebars');
 let spicedPg = require('spiced-pg');
-const dtb = require('../database.js');
+const dtb = require('../models/database.js');
+const user = require('../models/user.js')
 let myRedis = require("../myRedis");
 var session = require('express-session');
 var Store = require('connect-redis')(session);
@@ -15,7 +16,7 @@ let dbUrl = process.env.DATABASE_URL || `postgres:${require('../secrets').dbUser
 let db = spicedPg(dbUrl);
 
 
-router.get('/', dtb.requireLogin, (req, res) => {
+router.get('/', user.requireLogin, (req, res) => {
     dtb.getUserProfile(req.session.user.userId)
     .then((results) => {
         res.render('userprofile', {
@@ -27,7 +28,7 @@ router.get('/', dtb.requireLogin, (req, res) => {
     })
 })
 
-router.post('/', dtb.requireLogin, (req, res) => {
+router.post('/', user.requireLogin, (req, res) => {
     dtb.updateUserProfile(req.body, req.session.user.userId)
         .then((results) => {
             res.redirect('/userprofile/updated');
@@ -38,7 +39,7 @@ router.post('/', dtb.requireLogin, (req, res) => {
         })
 })
 
-router.get('/updated', dtb.requireLogin, (req, res) => {
+router.get('/updated', user.requireLogin, (req, res) => {
     dtb.getUserProfile(req.session.user.userId)
     .then((results) => {
         res.render('userprofile', {
@@ -52,7 +53,7 @@ router.get('/updated', dtb.requireLogin, (req, res) => {
     })
 });
 
-router.get("/manage", dtb.requireLogin, (req, res) => {
+router.get("/manage", user.requireLogin, (req, res) => {
     console.log(req.session.user.userId);
     dtb.getUserProfile(req.session.user.userId)
     .then((results) => {
@@ -64,7 +65,7 @@ router.get("/manage", dtb.requireLogin, (req, res) => {
     })
 });
 
-router.post("/manage", dtb.requireLogin, dtb.allRegisterFieldsManage, (req, res) => {
+router.post("/manage", user.requireLogin, dtb.allRegisterFieldsManage, (req, res) => {
     Promise.all([
         dtb.updateUserProfile(req.body, req.session.user.userId),
         dtb.updateUser(req.body, req.session.user.userId)
@@ -73,7 +74,7 @@ router.post("/manage", dtb.requireLogin, dtb.allRegisterFieldsManage, (req, res)
         return dtb.getUserProfile(req.session.user.userId)
     })
     .then((results) => {
-        return dtb.attachUpdatedInfo(results, req, res)
+        return user.attachUpdatedInfo(results, req, res)
     })
     .then((results) => {
         myRedis.deleteCacheSigs(); //Also deleting within the individual update functions above, in case either fails.
@@ -87,7 +88,7 @@ router.post("/manage", dtb.requireLogin, dtb.allRegisterFieldsManage, (req, res)
     .catch(err => console.log(err))
 });
 
-router.get("/password", dtb.requireLogin, (req, res) => {
+router.get("/password", user.requireLogin, (req, res) => {
     dtb.getUserProfile(req.session.user.userId)
     .then((results) => {
         res.render('password', {
@@ -99,7 +100,7 @@ router.get("/password", dtb.requireLogin, (req, res) => {
     })
 });
 
-router.post("/password", dtb.requireLogin, (req, res) => {
+router.post("/password", user.requireLogin, (req, res) => {
     dtb.checkAndUpdatePassword(req, res)
     .catch((err) => {
         console.log(err);
