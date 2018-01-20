@@ -45,7 +45,7 @@
         text-align: center;
         width: 400px;">
     <span class="loading text" style="position: relative; top: 12px;"> Loading </span>
-    <div class="fb-login-button" data-width="400" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="true" data-auto-logout-link="false" style="bottom: 18px" data-use-continue-as="true" onlogin="checkLoginState();"></div>
+    <div class="fb-login-button" data-width="400" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="true" data-auto-logout-link="false" style="bottom: 18px" data-use-continue-as="true" scope="public_profile,email,user_friends" onlogin="checkLoginState();"></div>
 </div>
 <script>
 $(window).on("ready", function () {

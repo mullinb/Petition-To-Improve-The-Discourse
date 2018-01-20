@@ -11,6 +11,8 @@ let myRedis = require("./myRedis");
 var session = require('express-session');
 var Store = require('connect-redis')(session);
 var sslRedirect = require('heroku-ssl-redirect');
+var secure = require('express-force-https');
+
 
 app.use(sslRedirect());
 
