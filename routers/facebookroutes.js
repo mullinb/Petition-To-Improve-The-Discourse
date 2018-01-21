@@ -105,6 +105,7 @@ router.post("/noEmail", user.requireEmail, (req, res) => {
 })
 
 router.get("/loggedIn", (req, res) => {
+    console.log(req.session.user);
     res.render("loggedInFb", {
         firstName: req.session.user.firstName,
         lastName: req.session.user.lastName

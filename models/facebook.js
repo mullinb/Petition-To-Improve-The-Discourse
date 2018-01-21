@@ -98,7 +98,6 @@ exports.registerFacebookUser = ({first_name, last_name, email, id}) => {
         )
     })
     .then((results) => {
-        console.log(results)
         return results.rows[0].id;
     })
 }
