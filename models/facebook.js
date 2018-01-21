@@ -50,6 +50,7 @@ module.exports.API = (accessToken) => {
         }
     ).then((res) => {
             if(!res || res.error) {
+                console.log("error occurred");
                 console.log(!res ? 'error occurred' : res.error);
                 return;
             }
