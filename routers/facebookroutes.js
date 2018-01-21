@@ -17,6 +17,7 @@ let db = spicedPg(dbUrl);
 
 router.get("/arrive", (req, res) => {
     let fbUser;
+    console.log('working');
     console.log(req.body.fbAccessToken);
     if (req.body.fbAccessToken) {
         fb.API(req.body.fbAccessToken)
