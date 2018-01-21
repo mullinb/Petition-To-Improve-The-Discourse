@@ -70,7 +70,7 @@ module.exports.API = (accessToken) => {
 
 exports.registerFacebookUser = ({first_name, last_name, email, id}) => {
     return db.query(
-        `INSERT INTO users (firstname, lastname, email, facebookid, datecreated) VALUES ($1, $2, $3, $4, $5) RETURNING id`, [first_name, last_name, email, id, new Date()]
+        `INSERT INTO users (firstname, lastname, email, facebook_id, datecreated) VALUES ($1, $2, $3, $4, $5) RETURNING id`, [first_name, last_name, email, id, new Date()]
     ).then((results) => {
         console.log(results)
         return results.rows[0].id;
@@ -79,7 +79,7 @@ exports.registerFacebookUser = ({first_name, last_name, email, id}) => {
 
 exports.loginFacebookUser = ({first_name, last_name, email, id}) => {
     return db.query(
-        `INSERT INTO users (firstname, lastname, email, facebookid, datecreated) VALUES ($1, $2, $3, $4, $5) RETURNING id`, [first_name, last_name, email, id, new Date()]
+        `INSERT INTO users (firstname, lastname, email, facebook_id, datecreated) VALUES ($1, $2, $3, $4, $5) RETURNING id`, [first_name, last_name, email, id, new Date()]
     ).then((results) => {
         console.log(results)
         return results.rows[0].id;
@@ -89,6 +89,10 @@ exports.loginFacebookUser = ({first_name, last_name, email, id}) => {
 
 exports.registerOrLogin = ({id}) => {
     return db.query(
-        `SELECT * FROM users WHERE users.facebookid = $2`, [id]
+        `SELECT * FROM users WHERE users.facebook_id = $2`, [id]
     )
+    .then((results) => {
+        console.log(results);
+        return results;
+    })
 }

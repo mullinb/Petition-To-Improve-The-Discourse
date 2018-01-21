@@ -89,7 +89,7 @@ INNER JOIN user_profiles ON signatures.userId = user_profiles.user_id;
 
 SELECT users.id, user_profiles.city, user_profiles.age, user_profiles.url, users.FirstName, users.LastName, users.Email FROM user_profiles, signatures, users WHERE user_profiles.user_id = users.id and users.id = signatures.userId;
 
-
+ALTER TABLE users ADD facebook_id VARCHAR(300);
 ALTER SEQUENCE users_id_seq RESTART WITH 1;
 ALTER SEQUENCE signatures_id_seq RESTART WITH 1;
 ALTER SEQUENCE user_profiles_id_seq RESTART WITH 1;
