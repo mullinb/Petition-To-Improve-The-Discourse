@@ -98,4 +98,6 @@ DELETE FROM users *;
 DELETE FROM signatures *;
 DELETE FROM user_profiles *;
 
+DROP TABLE users, signatures, user_profiles;
+
 ALTER TABLE signatures ADD CONSTRAINT REFERENCES users (id)

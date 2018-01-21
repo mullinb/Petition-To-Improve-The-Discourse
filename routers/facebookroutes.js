@@ -39,14 +39,14 @@ router.post("/arrive", (req, res) => {
                     ])
                 })
                 .then(() => {
-                    res.redirect('/loggedInFb');
+                    res.redirect('/facebook/loggedIn');
                 })
             } else {
                 if (fbUser.email) {
                     fb.registerFacebookUser(fbUser)
                     .then((results) => {
                         user.attachRegistrationInfo(results, req, res);
-                        res.redirect('/loggedInFb');
+                        res.redirect('/facebook/loggedIn');
                     }).catch((err) => {
                         console.log(err);
                         res.render('register', {
@@ -56,7 +56,7 @@ router.post("/arrive", (req, res) => {
                     })
                 } else {
                     fb.attachNoEmailInfo(fbUser, req, res);
-                    res.redirect("/noEmail");
+                    res.redirect("/facebook/noEmail");
                 }
             }
         })
@@ -87,7 +87,7 @@ router.post("/noEmail", user.requireEmail, (req, res) => {
         }
     })
     .then(() => {
-        res.redirect('/loggedInFb');
+        res.redirect('/facebook/loggedIn');
     })
     .catch((err) => {
         console.log(err);
@@ -95,5 +95,12 @@ router.post("/noEmail", user.requireEmail, (req, res) => {
             errorMessage: "no idea",
             manageLink: true
         })
+    })
+})
+
+router.get("/loggedIn", {
+    res.render("loggedInFb", {
+        firstName: req.session.user.firstName,
+        lastName: req.session.user.lastName
     })
 })
