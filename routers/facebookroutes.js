@@ -10,14 +10,17 @@ const user = require('../models/user.js')
 let myRedis = require("../myRedis");
 var session = require('express-session');
 var Store = require('connect-redis')(session);
+const querystring = require('querystring');
+
 
 let dbUrl = process.env.DATABASE_URL || `postgres:${require('../secrets').dbUser}@localhost:5432/petitionITD`;
 
 let db = spicedPg(dbUrl);
 
-router.get("/arrive", (req, res) => {
+router.post("/arrive", (req, res) => {
     let fbUser;
     console.log('working');
+    console.log(req.body);
     console.log(req.body.fbAccessToken);
     if (req.body.fbAccessToken) {
         fb.API(req.body.fbAccessToken)
