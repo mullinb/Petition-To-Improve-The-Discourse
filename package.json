@@ -33,6 +33,7 @@
     "express-force-https": "^1.0.0",
     "express-handlebars": "^3.0.0",
     "express-session": "^1.15.6",
+    "fb": "^2.0.0",
     "heroku-ssl-redirect": "0.0.4",
     "mongodb": "^3.0.1",
     "nodemailer": "^4.4.1",

@@ -78,7 +78,7 @@ app.get("/facebooklogin", (req, res) => {
     console.log(req);
     console.log(req.body.fbAccessToken);
     req.session.destroy();
-    res.render("logout");
+    res.redirect("/logout");
 })
 
 app.get('/logout', (req, res) => {
