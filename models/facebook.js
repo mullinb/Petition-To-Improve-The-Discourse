@@ -43,7 +43,7 @@ let myRedis = require("../myRedis");
 
 module.exports.API = (accessToken) => {
     FB.setAccessToken(`${accessToken}`);
-    return ('/me',
+    return fbAPI('/me',
         'GET',
         {
             "fields": "id,name,about,education,birthday,email,first_name,last_name,relationship_status,gender,locale,location,link,website,friends,cover,picture"
