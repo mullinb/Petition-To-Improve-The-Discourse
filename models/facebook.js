@@ -54,14 +54,6 @@ module.exports.API = (accessToken) => {
                 return;
             }
             console.log(res);
-            console.log(res.id);
-            console.log(res.first_name);
-            console.log(res.last_name);
-            console.log(res.birthday);
-            console.log(res.picture.data.url);
-            console.log(res.email);
-            console.log(res.website);
-            console.log(res.link);
             return(res);
     }).catch((err) => {
         console.log(err);
