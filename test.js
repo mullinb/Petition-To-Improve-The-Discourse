@@ -1,5 +1,6 @@
 let https = require("https");
 var FB = require('fb');
+let promisify = require("util").promisify;
 
 
 // const options = {
@@ -13,7 +14,7 @@ var FB = require('fb');
 // AppID: 388841504898975,
 // AppSecret: "316a6ac71284b28593cdcccd075840ab"
 
-
+let fbAPI = promisify(FB.api);
 
 FB.options({
     appId: 388841504898975
@@ -24,12 +25,12 @@ FB.setAccessToken('EAACEdEose0cBABg0ZBsgi3hbqmcM006JIRgjqLT3oFm2zkGptjaw2ZBcjAC0
 
 console.log(FB.options());
 
-FB.api('/me',
+fbAPI('/me',
     'GET',
     {
         "fields": "id,name,about,education,birthday,email,first_name,last_name,relationship_status,gender,locale,location,link,website,friends,cover,picture"
-    },
-    function (res) {
+    }
+).then((res) => {
         if(!res || res.error) {
             console.log(!res ? 'error occurred' : res.error);
             return;
@@ -45,5 +46,7 @@ FB.api('/me',
         console.log(res.email);
         console.log(res.website);
         console.log(res.link);
-    }
-);
+
+}).catch((err) => {
+    console.log(err);
+})

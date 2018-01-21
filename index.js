@@ -12,6 +12,8 @@ var session = require('express-session');
 var Store = require('connect-redis')(session);
 var sslRedirect = require('heroku-ssl-redirect');
 var secure = require('express-force-https');
+let FB = require('fb');
+let promisify = require("util").promisify;
 
 
 app.use(sslRedirect());
@@ -59,6 +61,8 @@ app.use(bodyParser.urlencoded({
 
 app.use(csurf());
 
+let fbAPI = promisify(FB.api);
+
 //==================ROUTES============//
 
 app.use(express.static('clientside'));
@@ -77,7 +81,7 @@ app.get('/', (req, res) => {
 app.get("/facebooklogin", (req, res) => {
     console.log(req);
     console.log(req.body.fbAccessToken);
-    req.session.destroy();
+
     res.redirect("/logout");
 })
 
