@@ -85,7 +85,7 @@ exports.loginFacebookUser = ({first_name, last_name, email, id}) => {
 
 exports.registerOrLogin = ({id}) => {
     return db.query(
-        `SELECT * FROM users WHERE users.facebook_id = $2`, [id]
+        `SELECT * FROM users WHERE users.facebook_id = $2`, [JSON.parse(id)]
     )
     .then((result) => {
         // console.log(result);
