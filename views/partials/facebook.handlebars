@@ -24,6 +24,7 @@
         FB.getLoginStatus(function(response) {
             console.log(response.authResponse.accessToken);
             $.ajax({
+                _csrf: "{{csrfToken}}",
                 method: "POST",
                 url: "/facebook/arrive",
                 data: {
