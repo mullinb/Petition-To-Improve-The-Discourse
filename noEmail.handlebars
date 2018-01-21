@@ -1,0 +1,11 @@
+<h2>Welcome {{firstName}} {{lastName}}. There is no email address associated with your Facebook account. An email is required to use this site, so please enter one below.</h2>
+
+<form method="POST" class ="form">
+    {{> csrf}}
+    <div class="registration-fields">
+        <label> Email Address <input type="email" name="EmailAddress" id="emailaddress" class="entry" value="{{emailAddress}}">  </label>
+    </div>
+    <div class="buttons">
+        <button type="submit">Submit</button>
+    </div>
+</form>

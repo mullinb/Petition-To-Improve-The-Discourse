@@ -19,6 +19,21 @@ exports.requireLogin = (req, res, next) => {
     }
 }
 
+exports.requireEmail = (req, res, next) => {
+    try {
+        if (req.body.EmailAddress) {
+            next();
+        }
+    } catch (e) {
+        res.render("noEmail", {
+            errorMessage: "You did not enter an email address. Please enter one below.",
+            csrfToken: req.csrfToken(),
+            firstName: req.session.user.firstName,
+            lastName: req.session.user.lastName
+        });
+    }
+}
+
 
 exports.allRegisterFields = (req, res, next) => {
     try {

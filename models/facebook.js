@@ -1,9 +1,12 @@
 let FB = require('fb');
 let promisify = require("util").promisify;
 let fbAPI = promisify(FB.api);
+const dtb = require('./database.js');
 FB.options({
     appId: 388841504898975
 });
+
+var generator = require('generate-password');
 
 let spicedPg = require('spiced-pg');
 
@@ -62,27 +65,6 @@ module.exports.API = (accessToken) => {
     })
 }
 
-exports.registerFacebookUser = ({first_name, last_name, email, id}) => {
-    console.log("attempting register");
-    return db.query(
-        `INSERT INTO users (firstname, lastname, email, facebook_id, datecreated) VALUES ($1, $2, $3, $4, $5) RETURNING id`, [first_name, last_name, email, id, new Date()]
-    ).then((results) => {
-        console.log(results)
-        return results.rows[0].id;
-    })
-}
-
-exports.loginFacebookUser = ({first_name, last_name, email, id}) => {
-    // console.log("attempting login");
-    // return db.query(
-    //     `INSERT INTO users (firstname, lastname, email, facebook_id, datecreated) VALUES ($1, $2, $3, $4, $5) RETURNING id`, [first_name, last_name, email, id, new Date()]
-    // ).then((results) => {
-    //     console.log(results)
-    //     return results.rows[0].id;
-    // })
-}
-
-
 exports.registerOrLogin = ({id}) => {
     console.log(id);
     return db.query(
@@ -91,5 +73,94 @@ exports.registerOrLogin = ({id}) => {
     .then((result) => {
         console.log(result.rows[0].exists);
         return result.rows[0].exists;
+    })
+}
+
+exports.loginFacebookUser = ({id}) => {
+    console.log("attempting login");
+    let userId;
+
+    return Promise.all([
+        db.query(
+            `SELECT * FROM users WHERE facebook_id = $1`, [id]),
+        db.query(`SELECT * FROM signatures WHERE user_id = $1`, [userId])
+)
+
+    ]
+    .then((results) => {
+        if (results) {
+            return Promise.all([
+                db.query(
+                    `SELECT * FROM users WHERE Email = $1`, [EmailAddress]),
+                db.query(
+                    `SELECT * FROM signatures WHERE user_id = $1`, [userId])
+            ])
+        } else {
+            throw new Error("bad pass");
+        }
+    })
+
+    return db.query(
+        `INSERT INTO users (firstname, lastname, email, facebook_id, datecreated) VALUES ($1, $2, $3, $4, $5) RETURNING id`, [first_name, last_name, email, id, new Date()]
+    ).then((results) => {
+        console.log(results)
+        return results.rows[0].id;
+    })
+}
+
+exports.getFBUserProfile = (fbId) => {
+    return db.query(
+        `SELECT * FROM users LEFT JOIN user_profiles ON users.id = user_profiles.user_id WHERE users.facebook_id = $1`, [fbId]
+    )
+    .then((results) => {
+        return results.rows[0]
+    })
+}
+
+
+
+exports.registerFacebookUser = ({first_name, last_name, email, id}) => {
+    console.log("attempting register");
+    let password = generator.generate({
+        length: 10,
+        numbers: true
+    });
+    return exports.hashPassword(password)
+    .then((hash) => {
+        return db.query(
+            `INSERT INTO users (firstname, lastname, email, HashPass, facebook_id, datecreated) VALUES ($1, $2, $3, $4, $5) RETURNING id`, [first_name, last_name, email, hash, id, new Date()]
+        )
+    })
+    .then((results) => {
+        console.log(results)
+        return results.rows[0].id;
+    })
+}
+
+exports.attachNoEmailInfo = ({first_name, last_name, id}, req, res) => {
+    req.session.user = {
+        loggedIn: true,
+        firstName: first_name,
+        lastName: last_name,
+        password: true,
+        fbId: id
+        };
+}
+
+exports.registerNoEmailUser = ({firstName, lastName, fbId}, email) => {
+    console.log("attempting registerNoEmail");
+    let password = generator.generate({
+        length: 10,
+        numbers: true
+    });
+    return exports.hashPassword(password)
+    .then((hash) => {
+        return db.query(
+            `INSERT INTO users (firstname, lastname, email, HashPass, facebook_id, datecreated) VALUES ($1, $2, $3, $4, $5) RETURNING id`, [first_name, last_name, email, hash, fbId, new Date()]
+        )
+    })
+    .then((results) => {
+        console.log(results)
+        return results.rows[0].id;
     })
 }

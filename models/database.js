@@ -103,29 +103,29 @@ exports.registerUser = ({FirstName, LastName, EmailAddress, Password}) => {
 }
 
 exports.loginUser = ({EmailAddress, Password}) => {
-    let userId;
-    return db.query(
-        `SELECT * FROM users WHERE Email = $1`, [EmailAddress]
-    ).then((results) => {
-        if(results.rows.length > 0) {
-            userId = results.rows[0].id;
-            return exports.checkPassword(Password, results.rows[0].hashpass);
-        } else {
-            throw new Error("bad email")
-        }
-    })
-    .then((results) => {
-        if (results) {
-            return Promise.all([
-                db.query(
-                    `SELECT * FROM users WHERE Email = $1`, [EmailAddress]),
-                db.query(
-                    `SELECT * FROM signatures WHERE user_id = $1`, [userId])
-            ])
-        } else {
-            throw new Error("bad pass");
-        }
-    })
+        let userId;
+        return db.query(
+            `SELECT * FROM users WHERE Email = $1`, [EmailAddress]
+        ).then((results) => {
+            if(results.rows.length > 0) {
+                userId = results.rows[0].id;
+                return exports.checkPassword(Password, results.rows[0].hashpass);
+            } else {
+                throw new Error("bad email")
+            }
+        })
+        .then((results) => {
+            if (results) {
+                return Promise.all([
+                    db.query(
+                        `SELECT * FROM users WHERE Email = $1`, [EmailAddress]),
+                    db.query(
+                        `SELECT * FROM signatures WHERE user_id = $1`, [userId])
+                ])
+            } else {
+                throw new Error("bad pass");
+            }
+        })
 }
 
 exports.getSignatures = (city) => {

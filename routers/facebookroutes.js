@@ -31,15 +31,55 @@ router.post("/arrive", (req, res) => {
         })
         .then((result) => {
             if (result) {
-                fb.loginFacebookUser(result);
+                fb.getFBUserProfile(fbUser.id)
+                .then((results) => {
+                    dtb.attachLoginInfo(results, req, res)
+                })
+                .then(() => {
+                    res.redirect('/');
+                })
             } else {
-                fb.registerFacebookUser(fbUser);
+                if (fbUser.email) {
+                    fb.registerFacebookUser(fbUser);
+                } else {
+                    fb.attachNoEmailInfo(fbUser, req, res);
+                    res.redirect("/noEmail");
+                }
             }
-        })
-        .then(() => {
         })
         .catch((err) => {
             console.log(err);
         })
     }
+})
+
+router.get("/noEmail", (req, res) => {
+    res.render("noEmail", {
+        csrfToken: req.csrfToken(),
+        firstName: req.session.user.firstName,
+        lastName: req.session.user.lastName
+    })
+})
+
+router.post("/noEmail", user.requireEmail, (req, res) => {
+    fb.registerNoEmailUser(req.session.user, req.body.EmailAddress)
+    .then(() => {
+        fb.getFBUserProfile(req.session.user.fbId)
+    })
+    .then((results) => {
+        req.session.user = {
+            emailAddress: results[0].rows[0].email,
+            userId: results[0].rows[0].id
+        }
+    })
+    .then(() => {
+        res.redirect("/")
+    })
+    .catch((err) => {
+        console.log(err);
+        res.render("invalid", {
+            errorMessage: "no idea",
+            manageLink: true
+        })
+    })
 })
