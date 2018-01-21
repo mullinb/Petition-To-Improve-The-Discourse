@@ -34,7 +34,7 @@ router.post("/arrive", (req, res) => {
                 fb.getFBUserProfile(fbUser.id)
                 .then((results) => {
                     return Promise.all([
-                        dtb.attachLoginInfo(results, req, res),
+                        user.attachLoginInfo(results, req, res),
                         dtb.existsSingleSig(results.rows[0].id, req, res)
                     ])
                 })
@@ -45,7 +45,7 @@ router.post("/arrive", (req, res) => {
                 if (fbUser.email) {
                     fb.registerFacebookUser(fbUser)
                     .then((results) => {
-                        dtb.attachRegistrationInfo(results, req, res);
+                        user.attachRegistrationInfo(results, req, res);
                         res.redirect('/loggedInFb');
                     }).catch((err) => {
                         console.log(err);
