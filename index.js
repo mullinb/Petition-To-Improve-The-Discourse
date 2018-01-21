@@ -73,7 +73,9 @@ app.use(express.static('clientside'));
 app.get('/', (req, res) => {
     console.log(req.session);
     if (!req.session.hasSigned && !req.session.user) {
-        res.render("landing")
+        res.render("landing", {
+            csrfToken: req.csrfToken()
+        })
     } else if (req.session.hasSigned && req.session.user.loggedIn) {
         res.redirect('/signatures/thanks');
     } else if (req.session.user.loggedIn) {
