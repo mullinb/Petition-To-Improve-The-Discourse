@@ -84,11 +84,12 @@ exports.loginFacebookUser = ({first_name, last_name, email, id}) => {
 
 
 exports.registerOrLogin = ({id}) => {
+    console.log(id);
     return db.query(
-        `SELECT * FROM users WHERE users.facebook_id = $2`, [JSON.parse(id)]
+        `SELECT EXISTS (SELECT 1 FROM users WHERE users.facebook_id = $1)`, [JSON.parse(id)]
     )
     .then((result) => {
-        // console.log(result);
-        return results;
+        console.log(result);
+        return result;
     })
 }
