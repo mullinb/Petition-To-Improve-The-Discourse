@@ -36,14 +36,20 @@ router.post("/arrive", (req, res) => {
                     ])
                 })
                 .then(() => {
-                    res.redirect('/facebook/loggedIn');
+                    res.json({
+                        redirect: '/facebook/loggedIn'
+                    })
+                    res.end();
                 })
             } else {
                 if (fbUser.email) {
                     fb.registerFacebookUser(fbUser)
                     .then((results) => {
                         user.attachRegistrationInfo(results, req, res);
-                        res.redirect('/facebook/loggedIn');
+                        res.json({
+                            redirect: '/facebook/loggedIn'
+                        })
+                        res.end();
                     }).catch((err) => {
                         console.log(err);
                         res.render('register', {
@@ -53,7 +59,10 @@ router.post("/arrive", (req, res) => {
                     })
                 } else {
                     fb.attachNoEmailInfo(fbUser, req, res);
-                    res.redirect("/facebook/noEmail");
+                    res.json({
+                        redirect: "/facebook/noEmail"
+                    })
+                    res.end();
                 }
             }
         })
