@@ -22,11 +22,10 @@ let db = spicedPg(dbUrl);
 router.post("/arrive", (req, res) => {
     let fbUser;
     console.log('working');
-    console.log(req.body);
-    console.log(req.body.fbAccessToken);
     if (req.body.fbAccessToken) {
         fb.API(req.body.fbAccessToken)
         .then((results) => {
+            console.log(results);
             fbUser = results;
             return fb.registerOrLogin(results);
         })
@@ -38,6 +37,9 @@ router.post("/arrive", (req, res) => {
             }
         })
         .then(() => {
+        })
+        .catch((err) => {
+            console.log(err);
         })
     }
 })
