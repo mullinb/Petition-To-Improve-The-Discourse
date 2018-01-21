@@ -20,6 +20,8 @@ app.use(sslRedirect());
 let registration = require('./routers/registration')
 let signatures = require('./routers/signatures')
 let userprofile = require('./routers/userprofile')
+let facebookroutes = require('./routers/facebookroutes')
+
 
 var store = {};
 if(process.env.REDIS_URL){
