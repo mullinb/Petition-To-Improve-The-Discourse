@@ -76,48 +76,14 @@ exports.registerOrLogin = ({id}) => {
     })
 }
 
-exports.loginFacebookUser = ({id}) => {
-    console.log("attempting login");
-    let userId;
-
-    return Promise.all([
-        db.query(
-            `SELECT * FROM users WHERE facebook_id = $1`, [id]),
-        db.query(`SELECT * FROM signatures WHERE user_id = $1`, [userId])
-)
-
-    ]
-    .then((results) => {
-        if (results) {
-            return Promise.all([
-                db.query(
-                    `SELECT * FROM users WHERE Email = $1`, [EmailAddress]),
-                db.query(
-                    `SELECT * FROM signatures WHERE user_id = $1`, [userId])
-            ])
-        } else {
-            throw new Error("bad pass");
-        }
-    })
-
-    return db.query(
-        `INSERT INTO users (firstname, lastname, email, facebook_id, datecreated) VALUES ($1, $2, $3, $4, $5) RETURNING id`, [first_name, last_name, email, id, new Date()]
-    ).then((results) => {
-        console.log(results)
-        return results.rows[0].id;
-    })
-}
-
 exports.getFBUserProfile = (fbId) => {
     return db.query(
         `SELECT * FROM users LEFT JOIN user_profiles ON users.id = user_profiles.user_id WHERE users.facebook_id = $1`, [fbId]
     )
     .then((results) => {
-        return results.rows[0]
+        return results.rows[0];
     })
 }
-
-
 
 exports.registerFacebookUser = ({first_name, last_name, email, id}) => {
     console.log("attempting register");
@@ -128,7 +94,7 @@ exports.registerFacebookUser = ({first_name, last_name, email, id}) => {
     return exports.hashPassword(password)
     .then((hash) => {
         return db.query(
-            `INSERT INTO users (firstname, lastname, email, HashPass, facebook_id, datecreated) VALUES ($1, $2, $3, $4, $5) RETURNING id`, [first_name, last_name, email, hash, id, new Date()]
+            `INSERT INTO users (firstname, lastname, email, HashPass, facebook_id, datecreated) VALUES ($1, $2, $3, $4, $5) RETURNING firstname, lastname, email, facebook_id, id`, [first_name, last_name, email, hash, id, new Date()]
         )
     })
     .then((results) => {

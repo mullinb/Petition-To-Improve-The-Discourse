@@ -33,14 +33,27 @@ router.post("/arrive", (req, res) => {
             if (result) {
                 fb.getFBUserProfile(fbUser.id)
                 .then((results) => {
-                    dtb.attachLoginInfo(results, req, res)
+                    return Promise.all([
+                        dtb.attachLoginInfo(results, req, res);
+                        dtb.existsSingleSig(results.rows[0].id, req, res);
+                    ])
                 })
                 .then(() => {
-                    res.redirect('/');
+                    res.redirect('/loggedInFb');
                 })
             } else {
                 if (fbUser.email) {
-                    fb.registerFacebookUser(fbUser);
+                    fb.registerFacebookUser(fbUser)
+                    .then((results) => {
+                        dtb.attachRegistrationInfo(results, req, res);
+                        res.redirect('/loggedInFb');
+                    }).catch((err) => {
+                        console.log(err);
+                        res.render('register', {
+                            errorMessage: "The email associated with your facebook account is already registered, please login with it or try another!",
+                            csrfToken: req.csrfToken()
+                        })
+                    })
                 } else {
                     fb.attachNoEmailInfo(fbUser, req, res);
                     res.redirect("/noEmail");
@@ -49,6 +62,7 @@ router.post("/arrive", (req, res) => {
         })
         .catch((err) => {
             console.log(err);
+            res.redirect("invalid");
         })
     }
 })
@@ -73,7 +87,7 @@ router.post("/noEmail", user.requireEmail, (req, res) => {
         }
     })
     .then(() => {
-        res.redirect("/")
+        res.redirect('/loggedInFb');
     })
     .catch((err) => {
         console.log(err);

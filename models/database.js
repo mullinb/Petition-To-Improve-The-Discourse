@@ -75,6 +75,15 @@ exports.signPetition = ({userId}, sig) => {
         })
 }
 
+exports.existsSingleSig = (userId, req, res) => {
+    return db.query(
+            `SELECT EXISTS (SELECT 1 FROM signatures WHERE signatures.user_id = $1)`, [userId])
+        .then((results) => {
+            req.session.hasSigned = result.rows[0].exists;
+            return;
+        })
+}
+
 exports.deleteSig = (userId) => {
     return db.query(
         `DELETE FROM signatures where user_id = $1;`, [userId])
