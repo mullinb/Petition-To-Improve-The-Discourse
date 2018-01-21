@@ -26,7 +26,7 @@ router.post("/arrive", (req, res) => {
         .then((results) => {
             fbUser = results;
             console.log("should have a result below")
-            console.log(fbUser);
+            console.log(fbUser.id);
             return fb.registerOrLogin(results);
         })
         .then((result) => {
