@@ -11,7 +11,7 @@ let myRedis = require("../myRedis");
 var session = require('express-session');
 var Store = require('connect-redis')(session);
 const querystring = require('querystring');
-let fb = require('./models/facebook.js');
+let fb = require('../models/facebook.js');
 
 
 

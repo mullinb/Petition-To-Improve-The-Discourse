@@ -13,7 +13,6 @@ var Store = require('connect-redis')(session);
 var sslRedirect = require('heroku-ssl-redirect');
 var secure = require('express-force-https');
 
-let fb = require('./models/facebook.js');
 
 app.use(sslRedirect());
 
