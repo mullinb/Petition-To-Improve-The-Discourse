@@ -25,8 +25,8 @@ router.post("/arrive", (req, res) => {
     if (req.body.fbAccessToken) {
         fb.API(req.body.fbAccessToken)
         .then((results) => {
-            console.log(results);
             fbUser = results;
+            console.log(fbUser);
             return fb.registerOrLogin(results);
         })
         .then((result) => {
