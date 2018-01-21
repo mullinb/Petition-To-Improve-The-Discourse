@@ -57,7 +57,8 @@ module.exports.API = (accessToken) => {
             return(res);
     }).catch((err) => {
         console.log("error2 occurred");
-        console.log(err);
+        console.log("how's this possible " + err);
+        return(err);
     })
 }
 
