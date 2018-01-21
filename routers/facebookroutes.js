@@ -24,7 +24,7 @@ router.get("/arrive", (req, res) => {
             fbUser = results;
             return fb.registerOrLogin(results);
         })
-        .then((result) {
+        .then((result) => {
             if (result) {
                 fb.loginFacebookUser(result);
             } else {
