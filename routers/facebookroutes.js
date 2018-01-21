@@ -20,9 +20,10 @@ router.get("/arrive", (req, res) => {
     console.log(req.body.fbAccessToken);
     if (req.body.fbAccessToken) {
         fb.API(req.body.fbAccessToken)
-        .then(((results) => {
+        .then((results) => {
             fbUser = results;
             return fb.registerOrLogin(results);
+        })
         .then((result) {
             if (result) {
                 fb.loginFacebookUser(result);
