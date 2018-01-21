@@ -89,7 +89,7 @@ exports.registerOrLogin = ({id}) => {
         `SELECT EXISTS (SELECT 1 FROM users WHERE users.facebook_id = $1)`, [JSON.parse(id)]
     )
     .then((result) => {
-        console.log(results.rows[0].exists);
-        return results.rows[0].exists;
+        console.log(result.rows[0].exists);
+        return result.rows[0].exists;
     })
 }
