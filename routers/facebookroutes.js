@@ -21,11 +21,11 @@ let db = spicedPg(dbUrl);
 
 router.post("/arrive", (req, res) => {
     let fbUser;
-    console.log('working');
     if (req.body.fbAccessToken) {
         fb.API(req.body.fbAccessToken)
         .then((results) => {
             fbUser = results;
+            console.log("should have a result below")
             console.log(fbUser);
             return fb.registerOrLogin(results);
         })

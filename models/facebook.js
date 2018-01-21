@@ -85,7 +85,7 @@ exports.registerOrLogin = ({id}) => {
         `SELECT * FROM users WHERE users.facebook_id = $2`, [id]
     )
     .then((result) => {
-        console.log(result);
+        // console.log(result);
         return results;
     })
 }
