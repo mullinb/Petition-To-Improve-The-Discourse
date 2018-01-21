@@ -11,8 +11,8 @@
 <form method="POST" class ="form">
     {{> csrf}}
     <div class="registration-fields">
-        <label> Email Address <input type="email" name="EmailAddress" id="emailaddress" value="{{emailAddress}}">  </label>
-        <label> Password <input type="password" name="Password" id="password">  </label>
+        <label> Email Address <input type="email" name="EmailAddress" id="emailaddress" class="entry" value="{{emailAddress}}">  </label>
+        <label> Password <input type="password" name="Password" class="entry" id="password">  </label>
     </div>
     <div class="buttons">
         <button type="submit">Login NOW</button>

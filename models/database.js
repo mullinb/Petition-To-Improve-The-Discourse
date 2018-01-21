@@ -14,6 +14,10 @@ exports.requireSignature = (req, res, next) => {
     .then((results) => {
         if (results.rows[0]) {
             next();
+        } else {
+            res.render('unauthorized', {
+                errorMessage: `You may not view this page without first signing the <a href="/signatures/sign">petition</a>. Please sign.`
+            })
         }
     })
     .catch((err) => {
