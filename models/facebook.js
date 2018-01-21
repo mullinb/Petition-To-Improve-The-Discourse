@@ -70,7 +70,7 @@ module.exports.API = (accessToken) => {
 
 exports.registerFacebookUser = ({first_name, last_name, email, id}) => {
     return db.query(
-        `INSERT INTO users (firstname, lastname, email, facebookid, datecreated) VALUES ($1, $2, $3, $4, $5) RETURNING id`, [first_name, last_name, email, id, new Date()])
+        `INSERT INTO users (firstname, lastname, email, facebookid, datecreated) VALUES ($1, $2, $3, $4, $5) RETURNING id`, [first_name, last_name, email, id, new Date()]
     ).then((results) => {
         console.log(results)
         return results.rows[0].id;
