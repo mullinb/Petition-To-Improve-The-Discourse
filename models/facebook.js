@@ -73,13 +73,13 @@ exports.registerFacebookUser = ({first_name, last_name, email, id}) => {
 }
 
 exports.loginFacebookUser = ({first_name, last_name, email, id}) => {
-    console.log("attempting login");
-    return db.query(
-        `INSERT INTO users (firstname, lastname, email, facebook_id, datecreated) VALUES ($1, $2, $3, $4, $5) RETURNING id`, [first_name, last_name, email, id, new Date()]
-    ).then((results) => {
-        console.log(results)
-        return results.rows[0].id;
-    })
+    // console.log("attempting login");
+    // return db.query(
+    //     `INSERT INTO users (firstname, lastname, email, facebook_id, datecreated) VALUES ($1, $2, $3, $4, $5) RETURNING id`, [first_name, last_name, email, id, new Date()]
+    // ).then((results) => {
+    //     console.log(results)
+    //     return results.rows[0].id;
+    // })
 }
 
 
@@ -89,7 +89,7 @@ exports.registerOrLogin = ({id}) => {
         `SELECT EXISTS (SELECT 1 FROM users WHERE users.facebook_id = $1)`, [JSON.parse(id)]
     )
     .then((result) => {
-        console.log(result);
-        return result;
+        console.log(results.rows[0].exists);
+        return results.rows[0].exists;
     })
 }
