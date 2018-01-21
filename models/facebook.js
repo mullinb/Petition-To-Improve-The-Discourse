@@ -91,7 +91,7 @@ exports.registerFacebookUser = ({first_name, last_name, email, id}) => {
         length: 10,
         numbers: true
     });
-    return exports.hashPassword(password)
+    return dtb.hashPassword(password)
     .then((hash) => {
         return db.query(
             `INSERT INTO users (firstname, lastname, email, HashPass, facebook_id, datecreated) VALUES ($1, $2, $3, $4, $5) RETURNING firstname, lastname, email, facebook_id, id`, [first_name, last_name, email, hash, id, new Date()]
@@ -119,7 +119,7 @@ exports.registerNoEmailUser = ({firstName, lastName, fbId}, email) => {
         length: 10,
         numbers: true
     });
-    return exports.hashPassword(password)
+    return dtb.hashPassword(password)
     .then((hash) => {
         return db.query(
             `INSERT INTO users (firstname, lastname, email, HashPass, facebook_id, datecreated) VALUES ($1, $2, $3, $4, $5) RETURNING id`, [first_name, last_name, email, hash, fbId, new Date()]
