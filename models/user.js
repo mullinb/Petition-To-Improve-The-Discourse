@@ -107,6 +107,7 @@ exports.attachRegistrationInfo = (userId, req, res) => {
 }
 
 exports.attachLoginInfo = (results, req, res) => {
+    console.log(results);
     try {
         req.session.user = {
             loggedIn: true,
