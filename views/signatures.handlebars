@@ -17,8 +17,14 @@
                 {{/if}}
             {{/unless}}
 
-            {{this.firstname}}  {{this.lastname}}</a>{{#if this.age}}, {{this.age}} years of age{{/if}}{{#if ../city}}.{{/if}}{{#unless ../city}}{{#if this.city}}, from <a href="/signatures/list/{{this.city}}"> {{this.city}}</a>. {{/if}}{{/unless}} </li>
-        {{#if this.picUrl}}<img src="{{this.picUrl}}" style="height:50px; width:50px">{{/if}}
+            {{this.firstname}}  {{this.lastname}}</a>{{#if this.age}}, {{this.age}} years of age{{/if}}{{#if ../city}}.{{/if}}
+            {{#unless ../city}}
+                {{#if this.city}}, from <a href="/signatures/list/{{this.city}}">               {{this.city}}</a>.
+                {{/if}}
+            {{/unless}}
+            {{#if this.picUrl}}<img src="{{this.picUrl}}" style="height:50px; width:50px">{{/if}}
+        </li>
+
     {{/each}}
 </ul>
 {{> footer}}
