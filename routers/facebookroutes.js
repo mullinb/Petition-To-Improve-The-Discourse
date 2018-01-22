@@ -42,7 +42,7 @@ router.post("/arrive", (req, res) => {
                     console.log(results);
                     return Promise.all([
                         user.attachLoginInfo(results, req, res),
-                        dtb.existsSingleSig(results.rows[0].id, req, res)
+                        dtb.existsSingleSig(results.id, req, res)
                     ])
                 })
                 .then(() => {
