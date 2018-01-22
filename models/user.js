@@ -111,7 +111,8 @@ exports.attachLoginInfo = (results, req, res) => {
         req.session.hasSigned = false;
     }
     try {
-        req.session.user.facebook_id = results[1].rows[0].facebook_id;
+        console.log(results.rows[0].facebook_id + "TRYING")
+        req.session.user.facebook_id = results.rows[0].facebook_id;
     } catch(err) {
         console.log(err);
     }
