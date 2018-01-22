@@ -45,11 +45,13 @@ router.post("/arrive", (req, res) => {
                 if (fbUser.email) {
                     fb.registerFacebookUser(fbUser)
                     .then((results) => {
-                        user.attachRegistrationInfo(results, req, res);
-                        res.json({
-                            redirect: '/facebook/loggedIn'
+                        user.attachRegistrationInfo(results, req, res)
+                        .then(() => {
+                            res.json({
+                                redirect: '/facebook/loggedIn'
+                            })
+                            res.end();
                         })
-                        res.end();
                     }).catch((err) => {
                         console.log(err);
                         res.render('register', {
