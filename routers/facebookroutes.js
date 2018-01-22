@@ -53,6 +53,7 @@ router.post("/arrive", (req, res) => {
             } else {
                 fb.registerFacebookUser(fbUser, picUrl)
                 .then((results) => {
+                    console.log(results);
                     user.attachLoginInfo(results, req, res);
                     return results;
                 })
