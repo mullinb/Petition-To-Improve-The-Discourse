@@ -51,32 +51,24 @@ router.post("/arrive", (req, res) => {
                     res.end();
                 })
             } else {
-                if (fbUser.email) {
-                    fb.registerFacebookUser(fbUser, picUrl)
-                    .then((results) => {
-                        user.attachLoginInfo(results, req, res);
-                        return results;
-                    })
-                    .then(fb.generateUserProfile)
-                    .then(() => {
-                        res.json({
-                            redirect: '/facebook/loggedIn'
-                        })
-                        res.end();
-                    }).catch((err) => {
-                        console.log(err);
-                        res.render('register', {
-                            errorMessage: "The email associated with your facebook account is already registered, please login with it or try another!",
-                            csrfToken: req.csrfToken()
-                        })
-                    })
-                } else {
-                    fb.attachNoEmailInfo(fbUser, req, res);
+                fb.registerFacebookUser(fbUser, picUrl)
+                .then((results) => {
+                    user.attachLoginInfo(results, req, res);
+                    return results;
+                })
+                .then(fb.generateUserProfile)
+                .then(() => {
                     res.json({
-                        redirect: "/facebook/noEmail"
+                        redirect: '/facebook/loggedIn'
                     })
                     res.end();
-                }
+                }).catch((err) => {
+                    console.log(err);
+                    res.render('register', {
+                        errorMessage: "The email associated with your facebook account is already registered, please login with it or try another!",
+                        csrfToken: req.csrfToken()
+                    })
+                })
             }
         })
         .catch((err) => {
@@ -85,39 +77,39 @@ router.post("/arrive", (req, res) => {
         })
     }
 })
-
-router.get("/noEmail", (req, res) => {
-    res.render("noEmail", {
-        csrfToken: req.csrfToken(),
-        firstName: req.session.user.firstName,
-        lastName: req.session.user.lastName
-    })
-})
-
-router.post("/noEmail", user.requireEmail, (req, res) => {
-    fb.registerNoEmailUser(req.session.user, req.body.EmailAddress)
-    .then(() => {
-        fb.getFBUserProfile(req.session.user.fbId)
-    })
-    .then((results) => {
-        req.session.user = {
-            emailAddress: results[0].rows[0].email,
-            userId: results[0].rows[0].id
-        }
-        return results;
-    })
-    .then(fb.generateUserProfile)
-    .then(() => {
-        res.redirect('/facebook/loggedIn');
-    })
-    .catch((err) => {
-        console.log(err);
-        res.render("invalid", {
-            errorMessage: "no idea",
-            manageLink: true
-        })
-    })
-})
+//
+// router.get("/noEmail", (req, res) => {
+//     res.render("noEmail", {
+//         csrfToken: req.csrfToken(),
+//         firstName: req.session.user.firstName,
+//         lastName: req.session.user.lastName
+//     })
+// })
+//
+// router.post("/noEmail", user.requireEmail, (req, res) => {
+//     fb.registerNoEmailUser(req.session.user, req.body.EmailAddress)
+//     .then(() => {
+//         fb.getFBUserProfile(req.session.user.fbId)
+//     })
+//     .then((results) => {
+//         req.session.user = {
+//             emailAddress: results[0].rows[0].email,
+//             userId: results[0].rows[0].id
+//         }
+//         return results;
+//     })
+//     .then(fb.generateUserProfile)
+//     .then(() => {
+//         res.redirect('/facebook/loggedIn');
+//     })
+//     .catch((err) => {
+//         console.log(err);
+//         res.render("invalid", {
+//             errorMessage: "no idea",
+//             manageLink: true
+//         })
+//     })
+// })
 
 router.get("/loggedIn", (req, res) => {
     console.log(req.session.user);

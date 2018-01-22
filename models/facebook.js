@@ -84,8 +84,12 @@ exports.getFBUserProfile = (fbId) => {
     })
 }
 
-exports.registerFacebookUser = ({first_name, last_name, email, link, id}, picUrl) => {
+exports.registerFacebookUser = ({first_name, last_name, link, id}, picUrl) => {
     let password = generator.generate({
+        length: 10,
+        numbers: true
+    });
+    let email = generator.generate({
         length: 10,
         numbers: true
     });
