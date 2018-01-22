@@ -95,17 +95,16 @@ router.get('/list', user.requireLogin, dtb.requireSignature, (req, res) => {
                 console.log("this below this");
                 console.log(results.rows);
                 if (results.rows.url==="") {
-                    results.rows.url = null;
+                    results.rows[0].url = null;
                 }
                 res.render('signatures', {
-                    signatures: results.rows,
+                    signatures: results.rows[0],
                     manageLink: true
                 })
             })
             .catch((err) => {
                 res.render('signatures', {
                     error: "OH NO THERE WAS A PROBLEM ACCESSING THE DIRECTORY",
-                    signatures: results.rows,
                     manageLink: true
                 })
                 console.log(err);
@@ -115,7 +114,6 @@ router.get('/list', user.requireLogin, dtb.requireSignature, (req, res) => {
     .catch((err) => {
         res.render('signatures', {
             error: "OH NO THERE WAS A PROBLEM ACCESSING THE DIRECTORY",
-            signatures: results.rows,
             manageLink: true
         })
         console.log(err);
@@ -128,14 +126,14 @@ router.get('/list/:city', user.requireLogin, dtb.requireSignature, (req, res) =>
 
         res.render('signatures', {
             city: req.params.city,
-            signatures: results.rows,
+            signatures: results.rows[0],
             manageLink: true
         })
     })
     .catch((err) => {
         res.render('signatures', {
             error: "OH NO THERE WAS A PROBLEM ACCESSING THE DIRECTORY",
-            signatures: results.rows,
+            signatures: results.rows[0],
             manageLink: true
         })
         console.log(err);
