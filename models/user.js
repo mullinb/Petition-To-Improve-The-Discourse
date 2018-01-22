@@ -117,7 +117,7 @@ exports.attachLoginInfo = (results, req, res) => {
             userId: results[0].rows[0].id
         }
     } catch(err) {
-
+        console.log(err);
         req.session.user = {
         loggedIn: true,
         firstName: results.firstname,
