@@ -84,14 +84,23 @@ exports.attachRegistrationInfo = (userId, req, res) => {
 }
 
 exports.attachLoginInfo = (results, req, res) => {
-    req.session.user = {
+    try {
+        req.session.user = {
         loggedIn: true,
         firstName: results[0].rows[0].firstname,
         lastName: results[0].rows[0].lastname,
         emailAddress: results[0].rows[0].email,
         password: true,
         userId: results[0].rows[0].id
-    };
+    } catch(err) {
+        req.session.user = {
+        loggedIn: true,
+        firstName: results.rows[0].firstname,
+        lastName: results.rows[0].lastname,
+        emailAddress: results.rows[0].email,
+        password: true,
+        userId: results.rows[0].id
+    }
     try {
         req.session.signatureId = results[1].rows[0].id;
         req.session.hasSigned = true;
