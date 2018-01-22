@@ -56,6 +56,8 @@ CREATE TABLE users (
     Email VARCHAR(300) NOT NULL UNIQUE,
     HashPass VARCHAR(320) NOT NULL,
     facebook_id VARCHAR(300),
+    pic_url VARCHAR(300),
+    link VARCHAR(300),
     DateCreated timestamptz NOT NULL
 );
 

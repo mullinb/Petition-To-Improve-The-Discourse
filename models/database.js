@@ -140,11 +140,11 @@ exports.loginUser = ({EmailAddress, Password}) => {
 exports.getSignatures = (city) => {
     if (city) {
         return db.query(
-            `SELECT users.id AS user_id, user_profiles.city, user_profiles.age, user_profiles.url, users.FirstName, users.LastName, users.Email FROM user_profiles, signatures, users WHERE user_profiles.user_id = users.id and users.id = signatures.user_id and city = $1`, [city]
+            `SELECT users.id AS user_id, user_profiles.city, user_profiles.age, user_profiles.url, users.FirstName, users.LastName, users.Email, users.link, users.pic_url FROM user_profiles, signatures, users WHERE user_profiles.user_id = users.id and users.id = signatures.user_id and city = $1`, [city]
         )
     } else {
         return db.query(
-            `SELECT users.id, user_profiles.city, user_profiles.age, user_profiles.url, users.FirstName, users.LastName, users.Email FROM user_profiles, signatures, users WHERE user_profiles.user_id = users.id and users.id = signatures.user_id;`
+            `SELECT users.id, user_profiles.city, user_profiles.age, user_profiles.url, users.FirstName, users.LastName, users.Email, users.link, users.pic_url FROM user_profiles, signatures, users WHERE user_profiles.user_id = users.id and users.id = signatures.user_id;`
         )
     }
 }

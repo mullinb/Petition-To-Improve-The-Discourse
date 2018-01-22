@@ -18,13 +18,16 @@ let db = spicedPg(dbUrl);
 
 router.post("/arrive", (req, res) => {
     let fbUser;
+    let picUrl = '';
     if (req.body.fbAccessToken) {
         fb.API(req.body.fbAccessToken)
         .then((results) => {
             fbUser = results;
-            console.log("should have a result below")
-            console.log(fbUser.id);
-            return fb.registerOrLogin(results);
+            if (results.picture.data.url) {
+                picUrl = results.picture.data.url;
+            }
+            console.log(picUrl);
+            return fb.registerOrLogin(results, picUrl);
         })
         .then((result) => {
             if (result) {

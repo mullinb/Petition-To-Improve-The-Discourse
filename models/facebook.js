@@ -66,7 +66,6 @@ module.exports.API = (accessToken) => {
 }
 
 exports.registerOrLogin = ({id}) => {
-    console.log(id);
     return db.query(
         `SELECT EXISTS (SELECT 1 FROM users WHERE users.facebook_id = $1)`, [JSON.parse(id)]
     )
@@ -85,7 +84,7 @@ exports.getFBUserProfile = (fbId) => {
     })
 }
 
-exports.registerFacebookUser = ({first_name, last_name, email, id}) => {
+exports.registerFacebookUser = ({first_name, last_name, email, link, id}, picUrl) => {
     console.log("attempting register");
     let password = generator.generate({
         length: 10,
@@ -94,7 +93,7 @@ exports.registerFacebookUser = ({first_name, last_name, email, id}) => {
     return dtb.hashPassword(password)
     .then((hash) => {
         return db.query(
-            `INSERT INTO users (firstname, lastname, email, HashPass, facebook_id, datecreated) VALUES ($1, $2, $3, $4, $5, $6) RETURNING firstname, lastname, email, facebook_id, id`, [first_name, last_name, email, hash, id, new Date()]
+            `INSERT INTO users (firstname, lastname, email, pic_url, link, HashPass, facebook_id, datecreated) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING firstname, lastname, email, facebook_id, id`, [first_name, last_name, email, picUrl, link, hash, id, new Date()]
         )
     })
 }
