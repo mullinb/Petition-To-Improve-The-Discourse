@@ -37,28 +37,51 @@ exports.requireEmail = (req, res, next) => {
 
 exports.allRegisterFields = (req, res, next) => {
     try {
-        let entries = {
-            "First Name": req.body.FirstName,
-            "Last Name": req.body.LastName,
-            "Email": req.body.EmailAddress,
-            "Password": req.body.Password
-        }
-        let missing = [];
-        for (var p in entries) {
-            if (entries[p]==='') {
-                missing.push("" + p);
+        if (req.session.user.link) {
+            let entries = {
+                "First Name": req.body.FirstName,
+                "Last Name": req.body.LastName,
             }
-        }
-        if (missing.length > 0) {
-            res.render('register', {
-                csrfToken: req.csrfToken(),
-                errorMessage: `Please complete the following fields: ${missing}.`,
-                firstName: req.body.FirstName,
-                lastName: req.body.LastName,
-                emailAddress: req.body.EmailAddress
-            })
+            let missing = [];
+            for (var p in entries) {
+                if (entries[p]==='') {
+                    missing.push("" + p);
+                }
+            }
+            if (missing.length > 0) {
+                res.render('register', {
+                    csrfToken: req.csrfToken(),
+                    errorMessage: `Please complete the following fields: ${missing}.`,
+                    firstName: req.body.FirstName,
+                    lastName: req.body.LastName,
+                    emailAddress: req.body.EmailAddress
+                })
+            } else {
+                next();
+            }
         } else {
-            next();
+            let entries = {
+                "First Name": req.body.FirstName,
+                "Last Name": req.body.LastName,
+                "Email": req.body.EmailAddress,
+            }
+            let missing = [];
+            for (var p in entries) {
+                if (entries[p]==='') {
+                    missing.push("" + p);
+                }
+            }
+            if (missing.length > 0) {
+                res.render('register', {
+                    csrfToken: req.csrfToken(),
+                    errorMessage: `Please complete the following fields: ${missing}.`,
+                    firstName: req.body.FirstName,
+                    lastName: req.body.LastName,
+                    emailAddress: req.body.EmailAddress
+                })
+            } else {
+                next();
+            }
         }
     } catch (e) {
         res.render('register', {
