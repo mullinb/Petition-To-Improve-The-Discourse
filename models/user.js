@@ -121,7 +121,7 @@ exports.attachLoginInfo = (results, req, res) => {
         loggedIn: true,
         firstName: results.firstname,
         lastName: results.lastname,
-        // emailAddress: results.email,
+        emailAddress: results.email,
         password: true,
         userId: results.id
         }
@@ -130,12 +130,11 @@ exports.attachLoginInfo = (results, req, res) => {
         req.session.signatureId = results[1].rows[0].id;
         req.session.hasSigned = true;
     } catch(err) {
-        console.log(err);
         req.session.hasSigned = false;
     }
     try {
         console.log(results.rows[0].facebook_id + "TRYING")
-        req.session.user.facebook_id = results.rows[0].facebook_id;
+        req.session.user.facebook_id = results.facebook_id;
     } catch(err) {
         console.log(err);
     }
