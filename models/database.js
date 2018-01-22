@@ -79,8 +79,8 @@ exports.existsSingleSig = (userId, req, res) => {
     return db.query(
             `SELECT EXISTS (SELECT 1 FROM signatures WHERE signatures.user_id = $1)`, [userId])
         .then((results) => {
-            console.log(result.rows[0].exists);
-            req.session.hasSigned = result.rows[0].exists;
+            console.log(results.rows[0].exists);
+            req.session.hasSigned = results.rows[0].exists;
             return;
         })
 }

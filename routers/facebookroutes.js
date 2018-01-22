@@ -39,7 +39,6 @@ router.post("/arrive", (req, res) => {
                 console.log(result);
                 fb.getFBUserProfile(fbUser.id)
                 .then((results) => {
-                    console.log(results);
                     return Promise.all([
                         user.attachLoginInfo(results, req, res),
                         dtb.existsSingleSig(results.id, req, res)
@@ -55,7 +54,6 @@ router.post("/arrive", (req, res) => {
                 if (fbUser.email) {
                     fb.registerFacebookUser(fbUser, picUrl)
                     .then((results) => {
-                        console.log(results);
                         user.attachLoginInfo(results, req, res);
                         return results;
                     })
