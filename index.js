@@ -61,6 +61,9 @@ app.use(bodyParser.urlencoded({
 
 app.use(csurf());
 
+
+
+
 //==================ROUTES============//
 
 app.use(express.static('clientside'));

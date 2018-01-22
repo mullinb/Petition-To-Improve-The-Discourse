@@ -99,6 +99,11 @@ exports.attachLoginInfo = (results, req, res) => {
         console.log(err);
         req.session.hasSigned = false;
     }
+    try {
+        req.session.user.facebook_id = results[1].rows[0].facebook_id;
+    } catch(err) {
+        console.log(err);
+    }
 }
 
 exports.attachUpdatedInfo = (results, req, res) => {
