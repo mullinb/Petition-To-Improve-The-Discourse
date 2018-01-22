@@ -45,7 +45,8 @@ router.post("/arrive", (req, res) => {
                 if (fbUser.email) {
                     fb.registerFacebookUser(fbUser)
                     .then((results) => {
-                        user.attachLoginInfo(results.rows[0].id, req, res);
+                        console.log(results);
+                        user.attachLoginInfo(results, req, res);
                         res.json({
                             redirect: '/facebook/loggedIn'
                         })
