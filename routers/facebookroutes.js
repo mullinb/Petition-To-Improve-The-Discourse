@@ -23,7 +23,7 @@ router.post("/arrive", (req, res) => {
         fb.API(req.body.fbAccessToken)
         .then((results) => {
             fbUser = results;
-            if (results.picture.data.url) {
+            if (results.picture.data) {
                 picUrl = results.picture.data.url;
             }
             console.log(picUrl);
