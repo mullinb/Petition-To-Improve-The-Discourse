@@ -82,7 +82,7 @@ router.get('/thanks', user.requireLogin, dtb.requireSignature, (req, res) => {
 router.get('/list', user.requireLogin, dtb.requireSignature, (req, res) => {
     myRedis.checkCacheSigs()
     .then((result) => {
-        console.log(result "hopefully this is null");
+        console.log(result + "hopefully this is null");
         if (result !== null) {
             res.render('signatures', {
                 signatures: JSON.parse(result),
