@@ -25,8 +25,11 @@ router.post("/arrive", (req, res) => {
             fbUser = results;
             if (results.picture.data) {
                 picUrl = results.picture.data.url;
+                req.session.user.picUrl = picUrl;
             }
-            console.log(picUrl);
+            if (results.link) {
+                req.session.user.link = link;
+            }
             return fb.registerOrLogin(results, picUrl);
         })
         .then((result) => {
@@ -46,7 +49,7 @@ router.post("/arrive", (req, res) => {
                 })
             } else {
                 if (fbUser.email) {
-                    fb.registerFacebookUser(fbUser)
+                    fb.registerFacebookUser(fbUser, picUrl)
                     .then((results) => {
                         console.log(results);
                         user.attachLoginInfo(results, req, res);

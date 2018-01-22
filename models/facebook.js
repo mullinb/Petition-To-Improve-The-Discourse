@@ -109,7 +109,7 @@ exports.attachNoEmailInfo = ({first_name, last_name, id}, req, res) => {
         };
 }
 
-exports.registerNoEmailUser = ({firstName, lastName, fbId}, email) => {
+exports.registerNoEmailUser = ({firstName, lastName, fbId, picUrl, link}, email) => {
     console.log("attempting registerNoEmail");
     let password = generator.generate({
         length: 10,
@@ -118,7 +118,7 @@ exports.registerNoEmailUser = ({firstName, lastName, fbId}, email) => {
     return dtb.hashPassword(password)
     .then((hash) => {
         return db.query(
-            `INSERT INTO users (firstname, lastname, email, HashPass, facebook_id, datecreated) VALUES ($1, $2, $3, $4, $5) RETURNING id`, [first_name, last_name, email, hash, fbId, new Date()]
+            `INSERT INTO users (firstname, lastname, email, HashPass, pic_url, link, facebook_id, datecreated) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`, [first_name, last_name, email, hash, picUrl, link, fbId, new Date()]
         )
     })
     .then((results) => {
