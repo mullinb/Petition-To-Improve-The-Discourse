@@ -22,7 +22,7 @@
                 {{#if this.city}}, from <a href="/signatures/list/{{this.city}}">               {{this.city}}</a>.
                 {{/if}}
             {{/unless}}
-            {{#if this.pic_url}}<img src="{{this.pic_url}}" style="height:50px; width:50px">{{/if}}
+            {{#if this.pic_url}}<a href="{{this.link}}"><img src="{{this.pic_url}}" style="height:50px; width:50px"></a>{{/if}}
         </li>
 
     {{/each}}
