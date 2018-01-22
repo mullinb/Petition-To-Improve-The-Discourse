@@ -92,6 +92,9 @@ router.get('/list', user.requireLogin, dtb.requireSignature, (req, res) => {
             .then((results) => {
                 myRedis.setCacheSigs("signatures", JSON.stringify(results.rows));
                 console.log(results.rows);
+                if (results.rows.url==="") {
+                    results.rows.url = null;
+                }
                 res.render('signatures', {
                     signatures: results.rows,
                     manageLink: true
