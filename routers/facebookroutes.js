@@ -31,7 +31,7 @@ router.post("/arrive", (req, res) => {
                 }
             }
             if (results.link) {
-                req.session.user.link = link;
+                req.session.user.link = results.link;
             }
             return fb.registerOrLogin(results, picUrl);
         })
