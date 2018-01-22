@@ -97,9 +97,6 @@ exports.registerFacebookUser = ({first_name, last_name, email, id}) => {
             `INSERT INTO users (firstname, lastname, email, HashPass, facebook_id, datecreated) VALUES ($1, $2, $3, $4, $5, $6) RETURNING firstname, lastname, email, facebook_id, id`, [first_name, last_name, email, hash, id, new Date()]
         )
     })
-    .then((results) => {
-        return results.rows[0].id;
-    })
 }
 
 exports.attachNoEmailInfo = ({first_name, last_name, id}, req, res) => {
