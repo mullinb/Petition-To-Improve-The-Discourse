@@ -37,8 +37,9 @@ router.get('/register', user.requireLogout, (req, res) => {
 router.post('/register', user.allRegisterFields, user.requireLogout, (req, res) => {
     console.log('happenin')
     dtb.registerUser(req.body)
-        .then((userId) => {
-            user.attachRegistrationInfo(userId, req, res);
+        .then((results) => {
+            console.log(results.rows[0].user_id);
+            user.attachRegistrationInfo(results.rows[0].user_id, req, res);
             res.redirect('/userprofile');
         })
         .catch((err) => {

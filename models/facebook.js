@@ -126,3 +126,8 @@ exports.registerNoEmailUser = ({firstName, lastName, fbId, picUrl, link}, email)
         return results.rows[0].id;
     })
 }
+
+exports.generateUserProfile = (results) => {
+    return db.query(
+        `INSERT INTO user_profiles (user_id) VALUES ($1)`, [results.rows[0].id])
+}

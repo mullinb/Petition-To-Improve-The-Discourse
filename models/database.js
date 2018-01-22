@@ -106,8 +106,9 @@ exports.registerUser = ({FirstName, LastName, EmailAddress, Password}) => {
 
     })
     .then((results) => {
-        console.log(results)
-        return results.rows[0].id;
+        return db.query(
+            `INSERT INTO user_profiles (user_id) VALUES ($1) RETURNING user_id`, [results.rows[0].id]
+        )
     })
 }
 

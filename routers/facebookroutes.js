@@ -56,6 +56,10 @@ router.post("/arrive", (req, res) => {
                     .then((results) => {
                         console.log(results);
                         user.attachLoginInfo(results, req, res);
+                        return results;
+                    })
+                    .then(fb.generateUserProfile)
+                    .then(() => {
                         res.json({
                             redirect: '/facebook/loggedIn'
                         })
@@ -101,7 +105,9 @@ router.post("/noEmail", user.requireEmail, (req, res) => {
             emailAddress: results[0].rows[0].email,
             userId: results[0].rows[0].id
         }
+        return results;
     })
+    .then(fb.generateUserProfile)
     .then(() => {
         res.redirect('/facebook/loggedIn');
     })
