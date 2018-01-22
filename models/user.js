@@ -96,11 +96,11 @@ exports.attachLoginInfo = (results, req, res) => {
     } catch(err) {
         req.session.user = {
         loggedIn: true,
-        firstName: results.rows[0].firstname,
-        lastName: results.rows[0].lastname,
-        emailAddress: results.rows[0].email,
+        firstName: results.firstname,
+        lastName: results.lastname,
+        emailAddress: results.email,
         password: true,
-        userId: results.rows[0].id
+        userId: results.id
         }
     }
     try {
