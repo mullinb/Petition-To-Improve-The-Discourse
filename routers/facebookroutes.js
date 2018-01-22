@@ -27,7 +27,7 @@ router.post("/arrive", (req, res) => {
                 picUrl = results.picture.data.url;
                 console.log(req.session.user);
                 req.session.user = {
-                    picUrl = picUrl
+                    picUrl: picUrl
                 }
             }
             if (results.link) {
