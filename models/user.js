@@ -98,7 +98,7 @@ exports.attachLoginInfo = (results, req, res) => {
         loggedIn: true,
         firstName: results.firstname,
         lastName: results.lastname,
-        emailAddress: results.email,
+        // emailAddress: results.email,
         password: true,
         userId: results.id
         }
