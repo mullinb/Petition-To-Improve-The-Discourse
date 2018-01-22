@@ -85,14 +85,12 @@ exports.getFBUserProfile = (fbId) => {
 }
 
 exports.registerFacebookUser = ({first_name, last_name, email, link, id}, picUrl) => {
-    console.log(picUrl);
     let password = generator.generate({
         length: 10,
         numbers: true
     });
     return dtb.hashPassword(password)
     .then((hash) => {
-        console.log(picUrl);
         return db.query(
             `INSERT INTO users (firstname, lastname, email, pic_url, link, HashPass, facebook_id, datecreated) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING firstname, lastname, email, facebook_id, id`, [first_name, last_name, email, picUrl, link, hash, id, new Date()]
         )

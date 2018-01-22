@@ -36,8 +36,10 @@ router.post("/arrive", (req, res) => {
         })
         .then((result) => {
             if (result) {
+                console.log(result);
                 fb.getFBUserProfile(fbUser.id)
                 .then((results) => {
+                    console.log(results);
                     return Promise.all([
                         user.attachLoginInfo(results, req, res),
                         dtb.existsSingleSig(results.rows[0].id, req, res)
