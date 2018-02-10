@@ -1,4 +1,4 @@
-CREATE TABLE actors (
+UBCREATE TABLE actors (
     id SERIAL primary key,
     name VARCHAR(255) not null,
     age VARCHAR(255),

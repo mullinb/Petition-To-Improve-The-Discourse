@@ -99,7 +99,6 @@ exports.deleteSig = (userId) => {
 }
 
 exports.registerUser = ({FirstName, LastName, EmailAddress, Password}) => {
-    console.log('hello')
     return exports.hashPassword(Password)
         .then((hash) => {
             return db.query(
