@@ -18,4 +18,4 @@ Check it out live on Heroku <a href="https://petition-i-t-d.herokuapp.com/">here
 
 <img src="https://s3.amazonaws.com/fluxlymoppings/pics/6dr8-Y9esaLlIqp2769qdzwBwtEcptuZ.png" width=600>
 
-Note: this is not the best example of my abilities with CSS or styling in general; Please have a look at my Connect Four project if you would like a better idea of my skills in that area.
+Note: this is not the best example of my abilities with CSS or styling in general; Please have a look at my <a href="https://github.com/mullinb/connect4">Connect Four project</a> if you would like a better idea of my skills in that area.
