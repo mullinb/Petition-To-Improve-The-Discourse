@@ -2,7 +2,7 @@
 
 <h3>SPICED Academy Project: Static web portal served by Node.js server with dual database integration and Facebook Login</h3>
 
-<img src="https://s3.amazonaws.com/fluxlymoppings/pics/6dr8-Y9esaLlIqp2769qdzwBwtEcptuZ.png" width=460>
+<img src="https://s3.amazonaws.com/fluxlymoppings/pics/6dr8-Y9esaLlIqp2769qdzwBwtEcptuZ.png" width=600>
 
 This project introduced our class to PostGreSQL and relational databases in general. A series of static webpages collect personal information from the user and then request them to sign a (fictional) petition using a canvas HTML element. Once a user has signed the petition, a list of other signers is available, and can additionally sorted by location. 
 
