@@ -6,7 +6,7 @@
 
 This project introduced our class to PostGreSQL and relational databases in general. A series of static webpages collect personal information from the user and then request them to sign a (fictional) petition using a canvas HTML element. Once a user has signed the petition, a list of other signers is available, and can additionally sorted by location. 
 
-<img src="https://s3.amazonaws.com/fluxlymoppings/pics/-PszUK9mHPfvpwJ0bnr2XRYGEmWe4b8y.jpg" width=600>
+<img src="https://s3.amazonaws.com/fluxlymoppings/pics/59FbC5u93ij8Y4VmMqF9uuJvhQUcjTZD.png" width=600>
 
 PostGreSQL is used to handle the storage of user information and signatures. RedisSession is used to manage user login state, including for users who utilize Facebook Login. The Google Maps API was included to encourage uniformity in location names and for ease of use. It's also pretty neat to have Google's logo somewhere on your first real web project. Finally, Handlebars templates were used to generate the pages, which dynamically populate user-specific information at runtime. 
 
