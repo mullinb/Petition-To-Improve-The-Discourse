@@ -30,6 +30,8 @@ Note: this is not the best example of my abilities with CSS or styling in genera
 <li> Facebook Graph API </li>
 <li> Facebook Login </li>
 <li> Google Maps API </li>
+<li> PostGreSQL </li>
+<li> Redis/redis-session </li>
 <li> Handlebars </li>
 <li> Canvas </li>
 <li> Heroku </li>
